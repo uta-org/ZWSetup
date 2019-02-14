@@ -34,5 +34,17 @@ namespace ZWSetup.Lib.Properties {
                 this["PackageList"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TesterPath {
+            get {
+                return ((string)(this["TesterPath"]));
+            }
+            set {
+                this["TesterPath"] = value;
+            }
+        }
     }
 }

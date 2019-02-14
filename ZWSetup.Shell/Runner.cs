@@ -6,6 +6,8 @@ namespace ZWSetup.Shell
 
     internal class Runner
     {
+        // TODO: Make a extension for this
+
         [DllImport("Kernel32")]
         private static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add);
 
@@ -31,13 +33,16 @@ namespace ZWSetup.Shell
                 case CtrlType.CTRL_SHUTDOWN_EVENT:
                 case CtrlType.CTRL_CLOSE_EVENT:
                 default:
-                    PackageController.SaveSettings();
+                    SettingsController.SaveSettings();
                     return false;
             }
         }
 
         private static void Main(string[] args)
         {
+            _handler += new EventHandler(Handler);
+            SetConsoleCtrlHandler(_handler, true);
+
             new MainProgram().Run();
         }
     }

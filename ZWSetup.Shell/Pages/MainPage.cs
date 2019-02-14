@@ -29,7 +29,7 @@ namespace ZWSetup.Shell.Pages
 
         public static void SafeExit()
         {
-            PackageController.SaveSettings();
+            SettingsController.SaveSettings();
             Environment.Exit(0);
         }
     }

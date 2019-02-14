@@ -48,9 +48,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="uzLib.Lite">
-      <HintPath>..\..\uzLib.Lite\uzLib.Lite\bin\Release\uzLib.Lite.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\ProgramHelper.cs" />
@@ -73,6 +70,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <ProjectReference Include="..\..\uzLib.Lite\uzLib.Lite\uzLib.Lite.csproj">
+      <Project>{d4da84f9-521f-438b-9c70-7fe8f4d1f32a}</Project>
+      <Name>uzLib.Lite</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ZWSetup.Lib\ZWSetup.Lib.csproj">
       <Project>{4e474ec6-b8d2-4c2f-aa69-1b441cefec24}</Project>
       <Name>ZWSetup.Lib</Name>

@@ -55,7 +55,11 @@ namespace ZWSetup.Shell.Pages.Packages
             }
 
             ZTWPackage package = PackageController.Add(path);
-            Console.WriteLine($"Added package '{package.Name}' succesfully!", Color.DarkGreen);
+
+            // Then check if we have located Tester project... To append a new item to its csproj
+
+            Console.WriteLine($"Added package '{package.Name}' succesfully! Press any key to go back...", Color.DarkGreen);
+            Console.Read();
 
             (Program as UpdatableProgram).NavigateBack();
         }

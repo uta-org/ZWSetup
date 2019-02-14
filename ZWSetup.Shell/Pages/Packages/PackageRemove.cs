@@ -28,7 +28,8 @@ namespace ZWSetup.Shell.Pages.Packages
         public override void Display()
         {
             string name = PackageController.RemoveCurrent();
-            Console.WriteLine($"Removed package '{name}' succesfully!", Color.DarkGreen);
+            Console.WriteLine($"Removed package '{name}' succesfully! Press any key to go back...", Color.DarkGreen);
+            Console.Read();
 
             (Program as UpdatableProgram).NavigateBack();
         }
