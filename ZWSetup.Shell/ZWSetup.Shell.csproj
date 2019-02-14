@@ -48,7 +48,9 @@
   <ItemGroup>
     <Compile Include="FeatureExpansion\UpdatableMenu.cs" />
     <Compile Include="FeatureExpansion\UpdatableMenuPage.cs" />
+    <Compile Include="FeatureExpansion\UpdatableProgram.cs" />
     <Compile Include="MainProgram.cs" />
+    <Compile Include="Pages\MainPage.cs" />
     <Compile Include="Runner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -56,8 +58,6 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Pages\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

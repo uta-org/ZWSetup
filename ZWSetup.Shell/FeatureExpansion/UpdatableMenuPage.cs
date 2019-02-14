@@ -1,6 +1,7 @@
 ﻿using EasyConsole;
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ZWSetup.Shell.FeatureExpansion
@@ -10,24 +11,23 @@ namespace ZWSetup.Shell.FeatureExpansion
     /// </summary>
     public class UpdatableMenuPage : MenuPage
     {
+        private Program CurrentProgram { get; set; }
+
         protected new UpdatableMenu Menu { get; set; }
+
+        private Func<Program, IEnumerable<Option>> MyOptions { get; set; }
 
         private UpdatableMenuPage()
             : base("", null)
         {
         }
 
-        protected UpdatableMenuPage(string title, Program program)
+        protected UpdatableMenuPage(string title, Program program, Func<Program, IEnumerable<Option>> options)
             : base(title, program)
         {
-        }
-
-        public T SetOptions<T>(params Option[] options)
-            where T : UpdatableMenuPage
-        {
-            Menu.Options = options.ToList();
-
-            return (T)this;
+            CurrentProgram = program;
+            Menu = new UpdatableMenu();
+            MyOptions = options;
         }
 
         public override void Display()
@@ -49,6 +49,11 @@ namespace ZWSetup.Shell.FeatureExpansion
                 Menu.Add("Go back", () => { Program.NavigateBack(); });
 
             Menu.Display();
+        }
+
+        public void UpdateOptions()
+        {
+            Menu.Options = MyOptions?.Invoke(CurrentProgram)?.ToList();
         }
     }
 }
