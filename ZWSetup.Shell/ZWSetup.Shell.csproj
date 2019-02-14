@@ -48,6 +48,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="uzLib.Lite">
+      <HintPath>..\..\uzLib.Lite\uzLib.Lite\bin\Release\uzLib.Lite.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\ProgramHelper.cs" />
