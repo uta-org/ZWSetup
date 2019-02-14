@@ -1,10 +1,12 @@
 ﻿using EasyConsole;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ZWSetup.Shell.Pages
 {
     using FeatureExpansion;
+    using Lib.Controller;
 
     public class MainPage : MenuPage
     {
@@ -22,6 +24,13 @@ namespace ZWSetup.Shell.Pages
         {
             yield return new Option("Enter package manager", () => program.NavigateTo<PackageManager>());
             yield return new Option("Install package", () => program.NavigateTo<PackageInstaller>());
+            yield return new Option("Exit application", SafeExit);
+        }
+
+        public static void SafeExit()
+        {
+            PackageController.SaveSettings();
+            Environment.Exit(0);
         }
     }
 }
