@@ -1,4 +1,5 @@
 ﻿using EasyConsole;
+using System;
 
 namespace ZWSetup.Shell.Extensions
 {
@@ -6,15 +7,23 @@ namespace ZWSetup.Shell.Extensions
 
     public static class ProgramHelper
     {
+        private const string OnlyUpdatableProgramException = "This extension must be used only with UpdatableProgram.";
+
         public static void NavigateTo<T>(this Page page)
             where T : Page
         {
-            page.Program.NavigateTo<T>();
+            if (!(page.Program is UpdatableProgram))
+                throw new Exception(OnlyUpdatableProgramException);
+
+            (page.Program as UpdatableProgram).NavigateTo<T>();
         }
 
         public static void NavigateBack(this Page page)
         {
-            page.Program.NavigateBack();
+            if (!(page.Program is UpdatableProgram))
+                throw new Exception(OnlyUpdatableProgramException);
+
+            (page.Program as UpdatableProgram).NavigateBack();
         }
     }
 }
