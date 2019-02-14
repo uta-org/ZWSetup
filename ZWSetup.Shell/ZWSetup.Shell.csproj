@@ -51,6 +51,8 @@
     <Compile Include="FeatureExpansion\UpdatableProgram.cs" />
     <Compile Include="MainProgram.cs" />
     <Compile Include="Pages\MainPage.cs" />
+    <Compile Include="Pages\PackageInstaller.cs" />
+    <Compile Include="Pages\PackageManager.cs" />
     <Compile Include="Runner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -58,6 +60,8 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Pages\Packages\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
