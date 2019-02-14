@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controller\PackageController.cs" />
     <Compile Include="FeatureExpansion\UpdatableMenu.cs" />
     <Compile Include="FeatureExpansion\UpdatableMenuPage.cs" />
     <Compile Include="FeatureExpansion\UpdatableProgram.cs" />
@@ -66,6 +67,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Pages\Packages\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ZWSetup.Lib\ZWSetup.Lib.csproj">
+      <Project>{4e474ec6-b8d2-4c2f-aa69-1b441cefec24}</Project>
+      <Name>ZWSetup.Lib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
