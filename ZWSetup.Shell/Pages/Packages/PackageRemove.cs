@@ -1,0 +1,41 @@
+﻿using EasyConsole;
+using System;
+using System.Drawing;
+
+using Console = Colorful.Console;
+
+namespace ZWSetup.Shell.Pages.Packages
+{
+    using Lib.Controller;
+    using Lib.Model;
+    using Interfaces;
+
+    public class PackageRemove : MenuPage, IPackage<PackageRemove>
+    {
+        public ZTWPackage CurrentPackage { get; set; }
+
+        private PackageRemove()
+            : base("", null)
+        {
+        }
+
+        public PackageRemove(Program program)
+            : base("Remove Package", program)
+        {
+        }
+
+        public override void Display()
+        {
+            string name = PackageController.RemoveCurrent();
+            Console.WriteLine($"Removed package '{name}' succesfully!", Color.DarkGreen);
+
+            Program.NavigateBack();
+        }
+
+        public PackageRemove SetPackage(ZTWPackage package)
+        {
+            CurrentPackage = package;
+            return this;
+        }
+    }
+}
