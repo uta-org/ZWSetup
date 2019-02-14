@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controller\PackageController.cs" />
     <Compile Include="Model\ZTWPackage.cs" />
     <Compile Include="PackageList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

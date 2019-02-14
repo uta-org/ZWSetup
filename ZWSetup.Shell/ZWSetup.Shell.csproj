@@ -50,7 +50,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controller\PackageController.cs" />
     <Compile Include="Extensions\ProgramHelper.cs" />
     <Compile Include="FeatureExpansion\UpdatableMenu.cs" />
     <Compile Include="FeatureExpansion\UpdatableMenuPage.cs" />
@@ -59,6 +58,7 @@
     <Compile Include="Pages\MainPage.cs" />
     <Compile Include="Pages\PackageInstaller.cs" />
     <Compile Include="Pages\PackageManager.cs" />
+    <Compile Include="Pages\Packages\Interfaces\IPackage.cs" />
     <Compile Include="Pages\Packages\PackageAdd.cs" />
     <Compile Include="Pages\Packages\PackageRemove.cs" />
     <Compile Include="Runner.cs" />
