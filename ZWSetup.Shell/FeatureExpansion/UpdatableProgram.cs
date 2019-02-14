@@ -28,6 +28,39 @@ namespace ZWSetup.Shell.FeatureExpansion
                 Pages.Add(pageType, page);
         }
 
+        public new T SetPage<T>() where T : Page
+        {
+            Type pageType = typeof(T);
+
+            // This causes a problem...
+            //if (CurrentPage != null && CurrentPage.GetType() == pageType)
+            //    return CurrentPage as T;
+
+            // leave the current page
+
+            // select the new page
+            Page nextPage;
+            if (!Pages.TryGetValue(pageType, out nextPage))
+                throw new KeyNotFoundException($"The given page \"{pageType.Name}\" was not present in the program");
+
+            // enter the new page
+            History.Push(nextPage);
+
+            return CurrentPage as T;
+        }
+
+        public T GetPage<T>()
+            where T : Page
+        {
+            Type pageType = typeof(T);
+
+            Page nextPage;
+            if (!Pages.TryGetValue(pageType, out nextPage))
+                throw new KeyNotFoundException($"The given page \"{pageType.Name}\" was not present in the program");
+
+            return (T)nextPage;
+        }
+
         public new T NavigateTo<T>() where T : Page
         {
             (CurrentPage as UpdatableMenuPage).UpdateOptions();
@@ -48,18 +81,6 @@ namespace ZWSetup.Shell.FeatureExpansion
             Console.Clear();
             CurrentPage.Display();
             return CurrentPage;
-        }
-
-        public T GetPage<T>()
-            where T : Page
-        {
-            Type pageType = typeof(T);
-
-            Page nextPage;
-            if (!Pages.TryGetValue(pageType, out nextPage))
-                throw new KeyNotFoundException($"The given page \"{pageType.Name}\" was not present in the program");
-
-            return (T)nextPage;
         }
     }
 }
