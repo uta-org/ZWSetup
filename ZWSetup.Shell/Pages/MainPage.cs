@@ -11,6 +11,11 @@ namespace ZWSetup.Shell.Pages
 
     public class MainPage : UpdatableMenuPage
     {
+        private MainPage()
+            : base("", null, null)
+        {
+        }
+
         public MainPage(Program program)
         : base("Main Page", program, GetOptions)
         {
@@ -18,8 +23,8 @@ namespace ZWSetup.Shell.Pages
 
         public static IEnumerable<Option> GetOptions(Program program)
         {
-            yield return new Option("Enter package manager", () => program.NavigateTo<Page1>());
-            yield return new Option("Install package", () => program.NavigateTo<Page1>());
+            yield return new Option("Enter package manager", () => program.NavigateTo<PackageManager>());
+            yield return new Option("Install package", () => program.NavigateTo<PackageInstaller>());
         }
     }
 }
