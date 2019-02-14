@@ -25,6 +25,8 @@ namespace ZWSetup.Shell.FeatureExpansion
         {
             Menu = new UpdatableMenu();
             MyOptions = options;
+
+            UpdateOptions();
         }
 
         public override void Display()

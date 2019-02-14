@@ -20,6 +20,8 @@ namespace ZWSetup.Shell.Pages
         public override void Display()
         {
             Console.WriteLine("This page is still in development. Going back after pressing any key...", Color.Yellow);
+            Console.Read();
+
             Program.NavigateBack();
         }
     }
