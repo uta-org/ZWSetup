@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\PackageController.cs" />
+    <Compile Include="Extensions\ProgramHelper.cs" />
     <Compile Include="FeatureExpansion\UpdatableMenu.cs" />
     <Compile Include="FeatureExpansion\UpdatableMenuPage.cs" />
     <Compile Include="FeatureExpansion\UpdatableProgram.cs" />
@@ -58,6 +59,8 @@
     <Compile Include="Pages\MainPage.cs" />
     <Compile Include="Pages\PackageInstaller.cs" />
     <Compile Include="Pages\PackageManager.cs" />
+    <Compile Include="Pages\Packages\PackageAdd.cs" />
+    <Compile Include="Pages\Packages\PackageRemove.cs" />
     <Compile Include="Runner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -65,9 +68,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Pages\Packages\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\ZWSetup.Lib\ZWSetup.Lib.csproj">
       <Project>{4e474ec6-b8d2-4c2f-aa69-1b441cefec24}</Project>

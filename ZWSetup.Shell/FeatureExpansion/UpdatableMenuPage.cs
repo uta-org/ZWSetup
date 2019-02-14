@@ -13,14 +13,14 @@ namespace ZWSetup.Shell.FeatureExpansion
     {
         protected new UpdatableMenu Menu { get; set; }
 
-        private Func<Program, IEnumerable<Option>> MyOptions { get; set; }
+        private Func<UpdatableProgram, IEnumerable<Option>> MyOptions { get; set; }
 
         private UpdatableMenuPage()
             : base("", null)
         {
         }
 
-        protected UpdatableMenuPage(string title, Program program, Func<Program, IEnumerable<Option>> options)
+        protected UpdatableMenuPage(string title, UpdatableProgram program, Func<UpdatableProgram, IEnumerable<Option>> options)
             : base(title, program)
         {
             Menu = new UpdatableMenu();
@@ -50,7 +50,7 @@ namespace ZWSetup.Shell.FeatureExpansion
 
         public void UpdateOptions()
         {
-            Menu.Options = MyOptions?.Invoke(Program)?.ToList();
+            Menu.Options = MyOptions?.Invoke(Program as UpdatableProgram)?.ToList();
         }
     }
 }
