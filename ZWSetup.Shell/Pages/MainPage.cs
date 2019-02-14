@@ -1,19 +1,20 @@
 ﻿using EasyConsole;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ZWSetup.Shell.Pages
 {
     using FeatureExpansion;
 
-    public class MainPage : UpdatableMenuPage
+    public class MainPage : MenuPage
     {
         private MainPage()
-            : base("", null, null)
+            : base("", null)
         {
         }
 
         public MainPage(UpdatableProgram program)
-        : base("Main Page", program, GetOptions)
+        : base("Main Page", program, GetOptions(program).ToArray())
         {
         }
 

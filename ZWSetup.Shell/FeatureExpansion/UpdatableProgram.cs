@@ -63,7 +63,8 @@ namespace ZWSetup.Shell.FeatureExpansion
 
         public new T NavigateTo<T>() where T : Page
         {
-            (CurrentPage as UpdatableMenuPage).UpdateOptions();
+            if (CurrentPage != null && CurrentPage is UpdatableMenuPage)
+                (CurrentPage as UpdatableMenuPage).UpdateOptions();
 
             SetPage<T>();
 
@@ -74,7 +75,8 @@ namespace ZWSetup.Shell.FeatureExpansion
 
         public new Page NavigateBack()
         {
-            (CurrentPage as UpdatableMenuPage).UpdateOptions();
+            if (CurrentPage != null && CurrentPage is UpdatableMenuPage)
+                (CurrentPage as UpdatableMenuPage).UpdateOptions();
 
             History.Pop();
 
