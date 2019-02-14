@@ -4,6 +4,8 @@
 
     public static class PackageController
     {
+        // Implement settings here after we solved the update problem
+
         public static ZTWPackage CurrentPackage => SelectedPackage != -1 ? PackageList[SelectedPackage] : null;
         public static int SelectedPackage { get; set; }
         public static PackageList PackageList { get; private set; }

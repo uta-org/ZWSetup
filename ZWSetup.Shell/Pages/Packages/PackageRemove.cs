@@ -9,6 +9,7 @@ namespace ZWSetup.Shell.Pages.Packages
     using Lib.Controller;
     using Lib.Model;
     using Interfaces;
+    using FeatureExpansion;
 
     public class PackageRemove : MenuPage, IPackage<PackageRemove>
     {
@@ -19,7 +20,7 @@ namespace ZWSetup.Shell.Pages.Packages
         {
         }
 
-        public PackageRemove(Program program)
+        public PackageRemove(UpdatableProgram program)
             : base("Remove Package", program)
         {
         }
@@ -29,7 +30,7 @@ namespace ZWSetup.Shell.Pages.Packages
             string name = PackageController.RemoveCurrent();
             Console.WriteLine($"Removed package '{name}' succesfully!", Color.DarkGreen);
 
-            Program.NavigateBack();
+            (Program as UpdatableProgram).NavigateBack();
         }
 
         public PackageRemove SetPackage(ZTWPackage package)

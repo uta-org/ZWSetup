@@ -5,6 +5,8 @@ using Console = Colorful.Console;
 
 namespace ZWSetup.Shell.Pages
 {
+    using FeatureExpansion;
+
     public class PackageManager : MenuPage
     {
         private PackageManager()
@@ -12,7 +14,7 @@ namespace ZWSetup.Shell.Pages
         {
         }
 
-        public PackageManager(Program program)
+        public PackageManager(UpdatableProgram program)
             : base("Main Page", program)
         {
         }
@@ -22,6 +24,7 @@ namespace ZWSetup.Shell.Pages
             Console.WriteLine("This page is still in development. Going back after pressing any key...", Color.Yellow);
             Console.Read();
 
+            // This doesn't be casted as UpdatableProgram
             Program.NavigateBack();
         }
     }

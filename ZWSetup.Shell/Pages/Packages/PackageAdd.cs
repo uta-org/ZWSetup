@@ -12,6 +12,7 @@ namespace ZWSetup.Shell.Pages.Packages
     using Interfaces;
     using Lib.Model;
     using Lib.Controller;
+    using FeatureExpansion;
 
     public class PackageAdd : MenuPage, IPackage<PackageAdd>
     {
@@ -22,7 +23,7 @@ namespace ZWSetup.Shell.Pages.Packages
         {
         }
 
-        public PackageAdd(Program program)
+        public PackageAdd(UpdatableProgram program)
             : base("Add New Package", program)
         {
         }
@@ -39,7 +40,7 @@ namespace ZWSetup.Shell.Pages.Packages
                 if (files.Length == 0)
                 {
                     Console.WriteLine("The provided folder doesn't have any folder!", Color.Red);
-                    Program.NavigateBack();
+                    (Program as UpdatableProgram).NavigateBack();
                     return;
                 }
 
@@ -49,14 +50,14 @@ namespace ZWSetup.Shell.Pages.Packages
             if (!File.Exists(path))
             {
                 Console.WriteLine("The file you provided doesn't exists!", Color.Red);
-                Program.NavigateBack();
+                (Program as UpdatableProgram).NavigateBack();
                 return;
             }
 
             ZTWPackage package = PackageController.Add(path);
             Console.WriteLine($"Added package '{package.Name}' succesfully!", Color.DarkGreen);
 
-            Program.NavigateBack();
+            (Program as UpdatableProgram).NavigateBack();
         }
 
         public PackageAdd SetPackage(ZTWPackage package)

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ZWSetup.Shell.Pages.Packages.Interfaces
+﻿namespace ZWSetup.Shell.Pages.Packages.Interfaces
 {
     using Lib.Model;
 

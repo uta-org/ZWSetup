@@ -75,10 +75,11 @@ namespace ZWSetup.Shell.FeatureExpansion
 
         public new Page NavigateBack()
         {
+            History.Pop();
+
+            // Going back you need to update after History is poped...
             if (CurrentPage != null && CurrentPage is UpdatableMenuPage)
                 (CurrentPage as UpdatableMenuPage).UpdateOptions();
-
-            History.Pop();
 
             Console.Clear();
             CurrentPage.Display();
