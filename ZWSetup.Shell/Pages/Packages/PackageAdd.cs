@@ -14,10 +14,8 @@ namespace ZWSetup.Shell.Pages.Packages
     using Lib.Controller;
     using FeatureExpansion;
 
-    public class PackageAdd : MenuPage, IPackage<PackageAdd>
+    public class PackageAdd : MenuPage
     {
-        public ZTWPackage CurrentPackage { get; set; }
-
         private PackageAdd()
             : base("", null)
         {
@@ -57,17 +55,17 @@ namespace ZWSetup.Shell.Pages.Packages
             ZTWPackage package = PackageController.Add(path);
 
             // Then check if we have located Tester project... To append a new item to its csproj
+            if (!SetupController.CheckTesterPathDetermined())
+            {
+                Console.Write("Couldn't determine the Tester csproj file, please, determine it.", Color.Yellow);
+                Console.Read();
+                return;
+            }
 
-            Console.WriteLine($"Added package '{package.Name}' succesfully! Press any key to go back...", Color.DarkGreen);
+            Console.Write($"Added package '{package.Name}' succesfully! Press any key to go back...", Color.DarkGreen);
             Console.Read();
 
             (Program as UpdatableProgram).NavigateBack();
-        }
-
-        public PackageAdd SetPackage(ZTWPackage package)
-        {
-            CurrentPackage = package;
-            return this;
         }
     }
 }

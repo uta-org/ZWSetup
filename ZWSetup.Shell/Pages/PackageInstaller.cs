@@ -26,12 +26,12 @@ namespace ZWSetup.Shell.Pages
 
             foreach (var pkg in PackageController.PackageList)
             {
-                yield return new Option(pkg.Name, () => PackageController.SelectedPackage = i);
+                yield return new Option(pkg.Name, () => { PackageController.SelectedPackage = i; program.NavigateTo<PackageOperator>(); });
                 ++i;
             }
 
-            yield return new Option("New package", () => program.GetPage<PackageAdd>().SetPackage(PackageController.CurrentPackage).NavigateTo<PackageAdd>());
-            yield return new Option("Remove package", () => program.GetPage<PackageRemove>().SetPackage(PackageController.CurrentPackage).NavigateTo<PackageRemove>());
+            yield return new Option("New package", () => program.NavigateTo<PackageAdd>());
+            yield return new Option("Remove package", () => program.GetPage<PackageRemove>().WithSubmenu(PackageController.PackageList).NavigateTo<PackageRemove>());
         }
     }
 }

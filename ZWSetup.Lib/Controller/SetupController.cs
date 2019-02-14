@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 using System.Reflection;
 using uzLib.Lite.Extensions;
 
@@ -11,7 +9,7 @@ namespace ZWSetup.Lib.Controller
 {
     public static class SetupController
     {
-        public static string TesterPath { get; internal set; }
+        public static string TesterPath { get; set; }
 
         /// <summary>
         /// Checks the if the Tester project path is determined.
@@ -33,16 +31,12 @@ namespace ZWSetup.Lib.Controller
                 if (!File.Exists(testerPath))
                     throw new Exception("If you're editing this project, please, don't alter Tester path");
 
-                SetTesterPath(testerPath);
+                TesterPath = testerPath;
 
                 return true;
             }
 
             return !string.IsNullOrEmpty(TesterPath);
-        }
-
-        public static void SetTesterPath(string path)
-        {
         }
     }
 }
