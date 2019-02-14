@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{A885342C-0D7C-485A-A1A6-923BDBC3C0CA}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>ZWSetup.Console</RootNamespace>
-    <AssemblyName>ZWSetup.Console</AssemblyName>
+    <RootNamespace>ZWSetup.Shell</RootNamespace>
+    <AssemblyName>ZWSetup.Shell</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -46,12 +46,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="FeatureExpansion\UpdatableMenu.cs" />
+    <Compile Include="FeatureExpansion\UpdatableMenuPage.cs" />
+    <Compile Include="MainProgram.cs" />
+    <Compile Include="Runner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Pages\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZWSetup.Console
+namespace ZWSetup.Shell
 {
-    class Program
+    public class MainProgram
     {
-        static void Main(string[] args)
-        {
-        }
     }
 }
