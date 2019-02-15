@@ -22,8 +22,6 @@ namespace ZWSetup.Shell.Controller
             if (pkg == null)
                 throw new ArgumentNullException("pkg");
 
-            string prettyName = pkg.PrettyName;
-
             string testerPath = SetupController.TesterPath;
 
             if (!SetupController.CheckTesterPathDetermined())
@@ -38,7 +36,7 @@ namespace ZWSetup.Shell.Controller
             CodeSnippetExpression helloWorld = new CodeSnippetExpression(@"Console.WriteLine(""Hello world!"")");
 
             // Declare the class && the "OnSetup" method with its expression
-            var c = new CodeTypeDeclaration($"{prettyName}Setup")
+            var c = new CodeTypeDeclaration(pkg.SetupClass)
             {
                 Attributes = MemberAttributes.Public,
                 IsClass = true,
@@ -54,7 +52,7 @@ namespace ZWSetup.Shell.Controller
             };
 
             // Specify and add Namespace
-            var ns = new CodeNamespace($"ZWSetup.Package.{prettyName}") { Types = { c } };
+            var ns = new CodeNamespace(pkg.SetupNamespace) { Types = { c } };
 
             // Create && add "System" import into existing namespace
             ns.Imports.Add(new CodeNamespaceImport("System"));
@@ -73,7 +71,7 @@ namespace ZWSetup.Shell.Controller
             var text = sb.ToString();
 
             string testerFolderPath = Path.GetDirectoryName(testerPath),
-                   saveFilePath = Path.Combine(testerFolderPath, "Setups", prettyName + ".cs"),
+                   saveFilePath = Path.Combine(testerFolderPath, "Setups", pkg.PrettyName + ".cs"),
                    saveFolderPath = Path.GetDirectoryName(saveFilePath);
 
             if (!Directory.Exists(saveFolderPath))

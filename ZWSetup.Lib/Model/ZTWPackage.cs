@@ -17,6 +17,15 @@ namespace ZWSetup.Lib.Model
         [JsonIgnore]
         public string PrettyName => Name.ToLower().FirstCharToUpper();
 
+        [JsonIgnore]
+        public string SetupClass => $"{PrettyName}Setup";
+
+        [JsonIgnore]
+        public string SetupNamespace => $"ZWSetup.Package.{PrettyName}";
+
+        [JsonIgnore]
+        public string SetupFullname => $"{SetupNamespace}.{SetupClass}";
+
         [JsonProperty]
         public string SolutionPath { get; set; }
 
