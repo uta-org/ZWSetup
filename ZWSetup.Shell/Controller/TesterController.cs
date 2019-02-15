@@ -4,6 +4,7 @@ using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.IO;
 using System.Text;
+using uzLib.Lite.Core.Input;
 using uzLib.Lite.Extensions;
 
 namespace ZWSetup.Shell.Controller
@@ -58,7 +59,12 @@ namespace ZWSetup.Shell.Controller
             if (!Directory.Exists(saveFolderPath))
                 Directory.CreateDirectory(saveFolderPath);
 
-            File.WriteAllText(saveFilePath, text);
+            bool overwrite = true;
+            if (File.Exists(saveFilePath))
+                overwrite = SmartInput.NextConfirm("Do you want to overwrite the current file?");
+
+            if (overwrite)
+                File.WriteAllText(saveFilePath, text);
 
             // Then, we will save it on the csproj
 
