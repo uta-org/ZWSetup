@@ -3,6 +3,7 @@ using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.IO;
+using System.Linq;
 using System.Text;
 using uzLib.Lite.Core.Input;
 using uzLib.Lite.Extensions;
@@ -53,10 +54,9 @@ namespace ZWSetup.Shell.Controller
             var ns = new CodeNamespace($"ZWSetup.Package.{prettyName}") { Types = { c } };
             var cu = new CodeCompileUnit() { Namespaces = { ns } };
 
-            // Create the "using System;" import
-            CodeNamespace samples = new CodeNamespace("CodeDOMSample");
-            samples.Imports.Add(new CodeNamespaceImport("System"));
-            cu.Namespaces.Add(samples);
+            // Create the "using System;" && import into existing namespace
+            ns.Imports.Add(new CodeNamespaceImport("System"));
+            cu.Namespaces.Add(ns);
 
             // Specify the language
             var provider = CodeDomProvider.CreateProvider("CSharp");
@@ -87,7 +87,11 @@ namespace ZWSetup.Shell.Controller
             // Solved issue thanks to: https://stackoverflow.com/a/44260284/3286975
 
             Project project = new Project(testerPath);
-            project.AddItem("Compile", IOHelper.MakeRelativePath(testerFolderPath, saveFilePath));
+
+            string relPath = IOHelper.MakeRelativePath(testerFolderPath, saveFilePath);
+            if (!project.GetItems("Compile").Any(item => item.UnevaluatedInclude == relPath))
+                project.AddItem("Compile", relPath);
+
             project.Save();
         }
     }
