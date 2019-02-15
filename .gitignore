@@ -192,7 +192,7 @@ PublishScripts/
 **/[Pp]ackages/*
 # except build/, which is used as an MSBuild target.
 !**/[Pp]ackages/build/
-!**/Pages/Packages/
+!ZWSetup.Shell/Pages/Packages/*
 # Uncomment if necessary however generally it will be regenerated when 
 needed
 #!**/[Pp]ackages/repositories.config
