@@ -52,11 +52,12 @@ namespace ZWSetup.Shell.Controller
 
             // Specify and add Namespace
             var ns = new CodeNamespace($"ZWSetup.Package.{prettyName}") { Types = { c } };
-            var cu = new CodeCompileUnit() { Namespaces = { ns } };
 
-            // Create the "using System;" && import into existing namespace
+            // Create && add "System" import into existing namespace
             ns.Imports.Add(new CodeNamespaceImport("System"));
-            cu.Namespaces.Add(ns);
+
+            // Then, create the unit && add everything into current namespace
+            var cu = new CodeCompileUnit() { Namespaces = { ns } };
 
             // Specify the language
             var provider = CodeDomProvider.CreateProvider("CSharp");
@@ -75,6 +76,7 @@ namespace ZWSetup.Shell.Controller
             if (!Directory.Exists(saveFolderPath))
                 Directory.CreateDirectory(saveFolderPath);
 
+            // Overwrite confirmation
             bool overwrite = true;
             if (File.Exists(saveFilePath))
                 overwrite = SmartInput.NextConfirm("Do you want to overwrite the current file?");

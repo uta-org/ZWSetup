@@ -40,6 +40,8 @@ namespace ZWSetup.Shell
 
         private static void Main(string[] args)
         {
+            SettingsController.LoadSettings();
+
             _handler += new EventHandler(Handler);
             SetConsoleCtrlHandler(_handler, true);
 
