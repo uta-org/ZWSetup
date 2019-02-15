@@ -24,10 +24,13 @@ namespace ZWSetup.Shell.Controller
 
             string testerPath = SetupController.TesterPath;
 
+            if (!string.IsNullOrEmpty(testerPath))
+                throw new Exception("Tester path is null. It must be specified by going to 'Install Package -> Locate Tester path'.");
+
             if (testerPath.IsDirectory() || !testerPath.IsDirectory() && Path.GetExtension(testerPath) == "csproj")
                 throw new Exception("The stored Tester isn't a csproj file.");
 
-            // First, we will create the template & store it on a file
+            // First, we will create the template && store it on a file
 
             var c = new CodeTypeDeclaration($"{prettyName}Setup")
             {

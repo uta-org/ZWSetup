@@ -36,16 +36,19 @@ namespace ZWSetup.Shell.Pages
 
             yield return new Option("New package", () => program.NavigateTo<PackageAdd>());
             yield return new Option("Remove package", () => program.GetPage<PackageRemove>().WithSubmenu(PackageController.PackageList).NavigateTo<PackageRemove>());
-            yield return new Option("Locate Tester path", LocateTesterPath);
+            yield return new Option("Locate Tester path", () => LocateTesterPath(program));
         }
 
-        private static void LocateTesterPath()
+        private static void LocateTesterPath(UpdatableProgram program)
         {
             Console.Write("Write the path to your ZWSetup cloned repository: ");
             string rootFolder = Console.ReadLine();
 
             SetupController.LocateTester(rootFolder);
             Console.WriteLine("Sucesfully located Tester project.", Color.DarkGreen);
+            Console.Read();
+
+            program.RedrawCurrentPage();
         }
     }
 }

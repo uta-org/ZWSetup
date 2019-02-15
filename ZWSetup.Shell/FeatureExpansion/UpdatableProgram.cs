@@ -68,9 +68,14 @@ namespace ZWSetup.Shell.FeatureExpansion
 
             SetPage<T>();
 
+            RedrawCurrentPage();
+            return CurrentPage as T;
+        }
+
+        public void RedrawCurrentPage()
+        {
             Console.Clear();
             CurrentPage.Display();
-            return CurrentPage as T;
         }
 
         public new Page NavigateBack()
@@ -81,8 +86,7 @@ namespace ZWSetup.Shell.FeatureExpansion
             if (CurrentPage != null && CurrentPage is UpdatableMenuPage)
                 (CurrentPage as UpdatableMenuPage).UpdateOptions();
 
-            Console.Clear();
-            CurrentPage.Display();
+            RedrawCurrentPage();
             return CurrentPage;
         }
     }
