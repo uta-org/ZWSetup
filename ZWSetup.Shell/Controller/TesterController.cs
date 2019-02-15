@@ -30,22 +30,38 @@ namespace ZWSetup.Shell.Controller
 
             // First, we will create the template && store it on a file
 
+            // Declare the Hello world expression
+            CodeSnippetExpression helloWorld = new CodeSnippetExpression(@"Console.WriteLine(""Hello world!"")");
+
+            // Declare the class && the "OnSetup" method with its expression
             var c = new CodeTypeDeclaration($"{prettyName}Setup")
             {
                 Attributes = MemberAttributes.Public,
                 IsClass = true,
                 Members =
                 {
-                    new CodeMemberMethod() { Name = "OnSetup", Attributes = MemberAttributes.Public | MemberAttributes.Static}
+                    new CodeMemberMethod()
+                    {
+                        Name = "OnSetup",
+                        Attributes = MemberAttributes.Public | MemberAttributes.Static,
+                        Statements = { new CodeExpressionStatement(helloWorld) }
+                    }
                 }
             };
 
+            // Specify and add Namespace
             var ns = new CodeNamespace($"ZWSetup.Package.{prettyName}") { Types = { c } };
-
             var cu = new CodeCompileUnit() { Namespaces = { ns } };
 
+            // Create the "using System;" import
+            CodeNamespace samples = new CodeNamespace("CodeDOMSample");
+            samples.Imports.Add(new CodeNamespaceImport("System"));
+            cu.Namespaces.Add(samples);
+
+            // Specify the language
             var provider = CodeDomProvider.CreateProvider("CSharp");
 
+            // Output generated code to string Builder
             var sb = new StringBuilder();
             using (var sourceWriter = new StringWriter(sb))
                 provider.GenerateCodeFromCompileUnit(cu, sourceWriter, new CodeGeneratorOptions());
