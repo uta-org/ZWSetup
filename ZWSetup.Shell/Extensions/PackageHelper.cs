@@ -19,15 +19,15 @@ namespace ZWSetup.Shell.Extensions
 
             Console.Clear();
 
-            //
-
             // First, show package options
 
             int i = 0;
             var menu = new Menu();
             foreach (var pkg in packages)
             {
-                menu.Add(new Option(pkg.Name, () => PackageController.SelectedPackage = i));
+                int iCopy = i; // Thanks to: https://stackoverflow.com/a/271447/3286975
+                // IntOption should be used here (NOT LONGER NEEDED)
+                menu.Add(new Option(pkg.Name, () => PackageController.SelectedPackage = iCopy));
                 ++i;
             }
 

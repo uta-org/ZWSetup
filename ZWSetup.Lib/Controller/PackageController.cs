@@ -1,4 +1,6 @@
-﻿namespace ZWSetup.Lib.Controller
+﻿using uzLib.Lite.Extensions;
+
+namespace ZWSetup.Lib.Controller
 {
     using Lib.Model;
 
@@ -6,7 +8,7 @@
     {
         // Implement settings here after we solved the update problem
 
-        public static ZTWPackage CurrentPackage => SelectedPackage != -1 ? PackageList[SelectedPackage] : null;
+        public static ZTWPackage CurrentPackage => !PackageList.IsOutOfBounds(SelectedPackage) ? PackageList[SelectedPackage] : null;
         public static int SelectedPackage { get; set; }
         public static PackageList PackageList { get; internal set; }
 

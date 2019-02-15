@@ -8,11 +8,6 @@ namespace ZWSetup.Lib.Controller
     {
         private static Settings MySettings => Settings.Default;
 
-        //static SettingsController()
-        //{
-        //    LoadSettings();
-        //}
-
         public static void LoadSettings()
         {
             string json = MySettings.PackageList;
