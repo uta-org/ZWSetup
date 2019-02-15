@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZWSetup.Tester", "ZWSetup.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "uzLib.Lite", "..\uzLib.Lite\uzLib.Lite\uzLib.Lite.csproj", "{D4DA84F9-521F-438B-9C70-7FE8F4D1F32A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZWSetup.Testing", "ZWSetup.Testing\ZWSetup.Testing.csproj", "{03828CA0-1438-454B-9ACC-A6B21287A5DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{D4DA84F9-521F-438B-9C70-7FE8F4D1F32A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4DA84F9-521F-438B-9C70-7FE8F4D1F32A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4DA84F9-521F-438B-9C70-7FE8F4D1F32A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03828CA0-1438-454B-9ACC-A6B21287A5DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03828CA0-1438-454B-9ACC-A6B21287A5DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03828CA0-1438-454B-9ACC-A6B21287A5DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03828CA0-1438-454B-9ACC-A6B21287A5DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

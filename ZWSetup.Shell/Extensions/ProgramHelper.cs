@@ -25,10 +25,5 @@ namespace ZWSetup.Shell.Extensions
 
             (page.Program as UpdatableProgram).NavigateBack();
         }
-
-        //public static object GetPageFromType<T>(this UpdatableProgram program)
-        //{
-        //    return program.History.
-        //}
     }
 }

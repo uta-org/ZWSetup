@@ -9,7 +9,7 @@ using uzLib.Lite.Extensions;
 
 namespace ZWSetup.Shell.Pages.Packages
 {
-    using Interfaces;
+    using Controller;
     using Lib.Model;
     using Lib.Controller;
     using FeatureExpansion;
@@ -61,6 +61,8 @@ namespace ZWSetup.Shell.Pages.Packages
                 Console.Read();
                 return;
             }
+
+            TesterController.GenerateSetupInTester(package.Name);
 
             Console.Write($"Added package '{package.Name}' succesfully! Press any key to go back...", Color.DarkGreen);
             Console.Read();
