@@ -21,10 +21,12 @@ namespace ZWSetup.Lib.Controller
         {
             // First, check if it can be determined.
 
-            string executingAssemblyFolderName = Path.GetFileName(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).ToLower();
+            string executingFolderPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                   executingAssemblyFolderName = Path.GetFileName(executingFolderPath).ToLower();
+
             if (executingAssemblyFolderName == "release" || executingAssemblyFolderName == "debug")
             {
-                string testerPath = Path.Combine(IOHelper.GoUpInTree(executingAssemblyFolderName, 3), "ZWSetup.Tester", "ZWSetup.Tester.csproj");
+                string testerPath = Path.Combine(IOHelper.GoUpInTree(executingFolderPath, 3), "ZWSetup.Tester", "ZWSetup.Tester.csproj");
 
                 if (!File.Exists(testerPath))
                     throw new Exception("If you're editing this project, please, don't alter Tester path");

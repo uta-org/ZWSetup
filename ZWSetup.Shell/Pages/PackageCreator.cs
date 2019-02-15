@@ -49,7 +49,7 @@ namespace ZWSetup.Shell.Pages
             Console.WriteLine("Sucesfully located Tester project.", Color.DarkGreen);
             Console.Read();
 
-            program.RedrawCurrentPage();
+            program.RedrawCurrentPage(true);
         }
     }
 }

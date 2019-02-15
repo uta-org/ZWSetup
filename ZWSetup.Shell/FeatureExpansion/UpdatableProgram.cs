@@ -72,8 +72,11 @@ namespace ZWSetup.Shell.FeatureExpansion
             return CurrentPage as T;
         }
 
-        public void RedrawCurrentPage()
+        public void RedrawCurrentPage(bool forceOptions = false)
         {
+            if (forceOptions && CurrentPage != null && CurrentPage is UpdatableMenuPage)
+                (CurrentPage as UpdatableMenuPage).UpdateOptions();
+
             Console.Clear();
             CurrentPage.Display();
         }
