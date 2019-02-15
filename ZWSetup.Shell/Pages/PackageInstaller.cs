@@ -1,5 +1,4 @@
 ﻿using EasyConsole;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -8,9 +7,9 @@ using Console = Colorful.Console;
 namespace ZWSetup.Shell.Pages
 {
     using Extensions;
-    using Packages;
     using FeatureExpansion;
     using Lib.Controller;
+    using Packages;
 
     public class PackageInstaller : UpdatableMenuPage
     {

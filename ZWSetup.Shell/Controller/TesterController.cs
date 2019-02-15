@@ -2,11 +2,8 @@
 using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using uzLib.Lite.Extensions;
 
 namespace ZWSetup.Shell.Controller
@@ -24,7 +21,7 @@ namespace ZWSetup.Shell.Controller
 
             string testerPath = SetupController.TesterPath;
 
-            if (!string.IsNullOrEmpty(testerPath))
+            if (string.IsNullOrEmpty(testerPath))
                 throw new Exception("Tester path is null. It must be specified by going to 'Install Package -> Locate Tester path'.");
 
             if (testerPath.IsDirectory() || !testerPath.IsDirectory() && Path.GetExtension(testerPath) == "csproj")

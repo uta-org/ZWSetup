@@ -1,15 +1,14 @@
 ﻿using EasyConsole;
-using System;
 using System.Drawing;
 
 using Console = Colorful.Console;
 
 namespace ZWSetup.Shell.Pages.Packages
 {
+    using FeatureExpansion;
+    using Interfaces;
     using Lib.Controller;
     using Lib.Model;
-    using Interfaces;
-    using FeatureExpansion;
 
     public class PackageRemove : MenuPage, IPackage<PackageRemove>
     {

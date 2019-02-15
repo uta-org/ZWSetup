@@ -1,18 +1,15 @@
 ﻿using EasyConsole;
-using System;
-using System.IO;
 using System.Drawing;
-
-using Console = Colorful.Console;
-
+using System.IO;
 using uzLib.Lite.Extensions;
+using Console = Colorful.Console;
 
 namespace ZWSetup.Shell.Pages.Packages
 {
     using Controller;
-    using Lib.Model;
-    using Lib.Controller;
     using FeatureExpansion;
+    using Lib.Controller;
+    using Lib.Model;
 
     public class PackageAdd : MenuPage
     {

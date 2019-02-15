@@ -5,8 +5,8 @@ using System.Collections.Generic;
 namespace ZWSetup.Shell.Extensions
 {
     using FeatureExpansion;
-    using Lib.Model;
     using Lib.Controller;
+    using Lib.Model;
     using Pages.Packages.Interfaces;
 
     public static class PackageHelper
