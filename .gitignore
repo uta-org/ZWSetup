@@ -350,3 +350,6 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+# Custom
+ZWSetup.Tester/Setups
