@@ -50,6 +50,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ZWSetup.Lib\ZWSetup.Lib.csproj">
+      <Project>{4e474ec6-b8d2-4c2f-aa69-1b441cefec24}</Project>
+      <Name>ZWSetup.Lib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ZWSetup.Shell\ZWSetup.Shell.csproj">
       <Project>{A885342C-0D7C-485A-A1A6-923BDBC3C0CA}</Project>
       <Name>ZWSetup.Shell</Name>

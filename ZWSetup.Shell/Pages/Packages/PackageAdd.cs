@@ -59,7 +59,7 @@ namespace ZWSetup.Shell.Pages.Packages
                 return;
             }
 
-            TesterController.GenerateSetupInTester(package.Name);
+            TesterController.GenerateSetupInTester(package);
 
             Console.Write($"Added package '{package.Name}' succesfully! Press any key to go back...", Color.DarkGreen);
             Console.Read();

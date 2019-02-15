@@ -10,20 +10,23 @@ using uzLib.Lite.Extensions;
 
 namespace ZWSetup.Shell.Controller
 {
+    using Lib.Model;
     using Lib.Controller;
 
     public static class TesterController
     {
-        public static void GenerateSetupInTester(string name)
+        public static void GenerateSetupInTester(ZTWPackage pkg)
         {
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException("name");
+            string name = pkg.Name;
 
-            string prettyName = name.ToLower().FirstCharToUpper();
+            if (pkg == null)
+                throw new ArgumentNullException("pkg");
+
+            string prettyName = pkg.PrettyName;
 
             string testerPath = SetupController.TesterPath;
 
-            if (string.IsNullOrEmpty(testerPath))
+            if (!SetupController.CheckTesterPathDetermined())
                 throw new Exception("Tester path is null. It must be specified by going to 'Enter Package Creator -> Locate Tester Path'.");
 
             if (!testerPath.IsDirectory() && Path.GetExtension(testerPath) == "csproj" || testerPath.IsDirectory())

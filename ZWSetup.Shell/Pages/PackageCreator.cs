@@ -29,7 +29,8 @@ namespace ZWSetup.Shell.Pages
 
             foreach (var pkg in PackageController.PackageList)
             {
-                yield return new Option(pkg.Name, () => { PackageController.SelectedPackage = i; program.NavigateTo<PackageOperator>(); });
+                int iCopy = i;
+                yield return new Option(pkg.Name, () => { PackageController.SelectedPackage = iCopy; program.NavigateTo<PackageOperator>(); });
                 ++i;
             }
 

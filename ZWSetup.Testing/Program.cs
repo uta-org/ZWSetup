@@ -7,7 +7,7 @@ namespace ZWSetup.Testing
     {
         private static void Main(string[] args)
         {
-            TesterController.GenerateSetupInTester("test");
+            TesterController.GenerateSetupInTester(null);
             Console.Read();
         }
     }

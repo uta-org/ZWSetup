@@ -14,6 +14,7 @@
             AddPage(new PackageManager(this));
             AddPage(new PackageAdd(this));
             AddPage(new PackageRemove(this));
+            AddPage(new PackageOperator(this));
 
             SetPage<MainPage>();
         }

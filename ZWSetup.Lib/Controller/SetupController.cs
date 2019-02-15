@@ -5,6 +5,8 @@ using uzLib.Lite.Extensions;
 
 namespace ZWSetup.Lib.Controller
 {
+    using Model;
+
     public static class SetupController
     {
         public static string TesterPath { get; internal set; }
@@ -62,6 +64,14 @@ namespace ZWSetup.Lib.Controller
 
             TesterPath = Path.Combine(rootFolder, "ZWSetup.Tester", "ZWSetup.Tester.csproj");
             return slnFiles[0];
+        }
+
+        public static string GetSetupFile(this ZTWPackage package)
+        {
+            if (!CheckTesterPathDetermined())
+                throw new Exception("You must specify Tester before trying to get the Setup file.");
+
+            return Path.Combine(Path.GetDirectoryName(TesterPath), "Setups", package.PrettyName + ".cs");
         }
     }
 }
