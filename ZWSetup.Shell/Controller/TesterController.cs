@@ -62,6 +62,8 @@ namespace ZWSetup.Shell.Controller
 
             // Then, we will save it on the csproj
 
+            // Solved issue thanks to: https://stackoverflow.com/a/44260284/3286975
+
             Project project = new Project(testerPath);
             project.AddItem("Compile", IOHelper.MakeRelativePath(testerFolderPath, saveFilePath));
             project.Save();
