@@ -35,7 +35,9 @@ namespace ZWSetup.Shell.Pages
 
             yield return new Option("New Package", () => program.NavigateTo<PackageAdd>());
             yield return new Option("Remove Package", () => program.GetPage<PackageRemove>().WithSubmenu(PackageController.PackageList).NavigateTo<PackageRemove>());
-            yield return new Option("Locate Tester Path", () => LocateTesterPath(program));
+
+            if (string.IsNullOrEmpty(SetupController.TesterPath))
+                yield return new Option("Locate Tester Path", () => LocateTesterPath(program));
         }
 
         private static void LocateTesterPath(UpdatableProgram program)
