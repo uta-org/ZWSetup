@@ -37,17 +37,29 @@ namespace ZWSetup.Lib.Controller
             return !string.IsNullOrEmpty(TesterPath);
         }
 
-        public static void LocateTester(string rootFolder)
+        /// <summary>
+        /// Locates the tester.
+        /// </summary>
+        /// <param name="rootFolder">The root folder.</param>
+        /// <returns>The solution file from the <paramref name="rootFolder"/>.</returns>
+        /// <exception cref="System.ArgumentException">
+        /// The specified path must be a folder (the root folder of a cloned repository of ZWSetup). - rootFolder
+        /// or
+        /// The specified path must be the root folder of your ZWSetup cloned repository. - rootFolder
+        /// </exception>
+        public static string LocateTester(string rootFolder)
         {
             if (!rootFolder.IsDirectory())
                 throw new ArgumentException("The specified path must be a folder (the root folder of a cloned repository of ZWSetup).", "rootFolder");
 
             var slnFiles = Directory.GetFiles(rootFolder, "ZWSetup.sln");
+            // Return this file, maybe the user wants to open devenv to edit the setup file.
 
             if (slnFiles.Length == 0)
                 throw new ArgumentException("The specified path must be the root folder of your ZWSetup cloned repository.", "rootFolder");
 
             TesterPath = Path.Combine(rootFolder, "ZWSetup.Tester", "ZWSetup.Tester.csproj");
+            return slnFiles[0];
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Build.Evaluation;
+using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
@@ -50,7 +51,8 @@ namespace ZWSetup.Shell.Controller
 
             var text = sb.ToString();
 
-            string saveFilePath = Path.Combine(Path.GetDirectoryName(testerPath), "Setups", prettyName + ".cs"),
+            string testerFolderPath = Path.GetDirectoryName(testerPath),
+                   saveFilePath = Path.Combine(testerFolderPath, "Setups", prettyName + ".cs"),
                    saveFolderPath = Path.GetDirectoryName(saveFilePath);
 
             if (!Directory.Exists(saveFolderPath))
@@ -59,6 +61,10 @@ namespace ZWSetup.Shell.Controller
             File.WriteAllText(saveFilePath, text);
 
             // Then, we will save it on the csproj
+
+            Project project = new Project(testerPath);
+            project.AddItem("Compile", IOHelper.MakeRelativePath(testerFolderPath, saveFilePath));
+            project.Save();
         }
     }
 }
