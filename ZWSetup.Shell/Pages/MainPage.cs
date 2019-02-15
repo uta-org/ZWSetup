@@ -22,9 +22,9 @@ namespace ZWSetup.Shell.Pages
 
         public static IEnumerable<Option> GetOptions(UpdatableProgram program)
         {
-            yield return new Option("Enter package manager", () => program.NavigateTo<PackageManager>());
-            yield return new Option("Install package", () => program.NavigateTo<PackageInstaller>());
-            yield return new Option("Exit application", SafeExit);
+            yield return new Option("Enter Package Manager", () => program.NavigateTo<PackageManager>());
+            yield return new Option("Enter Package Creator", () => program.NavigateTo<PackageCreator>());
+            yield return new Option("Exit Application", SafeExit);
         }
 
         public static void SafeExit()

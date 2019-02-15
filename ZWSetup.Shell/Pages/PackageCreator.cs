@@ -11,14 +11,14 @@ namespace ZWSetup.Shell.Pages
     using Lib.Controller;
     using Packages;
 
-    public class PackageInstaller : UpdatableMenuPage
+    public class PackageCreator : UpdatableMenuPage
     {
-        private PackageInstaller()
+        private PackageCreator()
             : base("", null, null)
         {
         }
 
-        public PackageInstaller(UpdatableProgram program)
+        public PackageCreator(UpdatableProgram program)
             : base("Main Page", program, GetOptions)
         {
         }
@@ -33,9 +33,9 @@ namespace ZWSetup.Shell.Pages
                 ++i;
             }
 
-            yield return new Option("New package", () => program.NavigateTo<PackageAdd>());
-            yield return new Option("Remove package", () => program.GetPage<PackageRemove>().WithSubmenu(PackageController.PackageList).NavigateTo<PackageRemove>());
-            yield return new Option("Locate Tester path", () => LocateTesterPath(program));
+            yield return new Option("New Package", () => program.NavigateTo<PackageAdd>());
+            yield return new Option("Remove Package", () => program.GetPage<PackageRemove>().WithSubmenu(PackageController.PackageList).NavigateTo<PackageRemove>());
+            yield return new Option("Locate Tester Path", () => LocateTesterPath(program));
         }
 
         private static void LocateTesterPath(UpdatableProgram program)
