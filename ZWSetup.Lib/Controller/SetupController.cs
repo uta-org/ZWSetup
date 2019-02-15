@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.IO;
 using System.Reflection;
 using uzLib.Lite.Extensions;
@@ -9,7 +7,7 @@ namespace ZWSetup.Lib.Controller
 {
     public static class SetupController
     {
-        public static string TesterPath { get; set; }
+        public static string TesterPath { get; internal set; }
 
         /// <summary>
         /// Checks the if the Tester project path is determined.
@@ -37,6 +35,19 @@ namespace ZWSetup.Lib.Controller
             }
 
             return !string.IsNullOrEmpty(TesterPath);
+        }
+
+        public static void LocateTester(string rootFolder)
+        {
+            if (!rootFolder.IsDirectory())
+                throw new ArgumentException("The specified path must be a folder (the root folder of a cloned repository of ZWSetup).", "rootFolder");
+
+            var slnFiles = Directory.GetFiles(rootFolder, "ZWSetup.sln");
+
+            if (slnFiles.Length == 0)
+                throw new ArgumentException("The specified path must be the root folder of your ZWSetup cloned repository.", "rootFolder");
+
+            TesterPath = Path.Combine(rootFolder, "ZWSetup.Tester", "ZWSetup.Tester.csproj");
         }
     }
 }

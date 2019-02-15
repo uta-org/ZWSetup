@@ -1,5 +1,9 @@
 ﻿using EasyConsole;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
+
+using Console = Colorful.Console;
 
 namespace ZWSetup.Shell.Pages
 {
@@ -32,6 +36,16 @@ namespace ZWSetup.Shell.Pages
 
             yield return new Option("New package", () => program.NavigateTo<PackageAdd>());
             yield return new Option("Remove package", () => program.GetPage<PackageRemove>().WithSubmenu(PackageController.PackageList).NavigateTo<PackageRemove>());
+            yield return new Option("Locate Tester path", LocateTesterPath);
+        }
+
+        private static void LocateTesterPath()
+        {
+            Console.Write("Write the path to your ZWSetup cloned repository: ");
+            string rootFolder = Console.ReadLine();
+
+            SetupController.LocateTester(rootFolder);
+            Console.WriteLine("Sucesfully located Tester project.", Color.DarkGreen);
         }
     }
 }
