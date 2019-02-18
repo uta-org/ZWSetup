@@ -24,7 +24,7 @@ namespace ZWSetup.Lib.Controller
             // First, check if it can be determined.
 
             string executingFolderPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                   executingAssemblyFolderName = Path.GetFileName(executingFolderPath).ToLower();
+                   executingAssemblyFolderName = Path.GetFileName(executingFolderPath).ToLowerInvariant();
 
             if (executingAssemblyFolderName == "release" || executingAssemblyFolderName == "debug")
             {
@@ -66,12 +66,17 @@ namespace ZWSetup.Lib.Controller
             return slnFiles[0];
         }
 
+        public static string GetSetupFileName(this ZTWPackage package)
+        {
+            return package.PrettyName + ".cs";
+        }
+
         public static string GetSetupFile(this ZTWPackage package)
         {
             if (!CheckTesterPathDetermined())
                 throw new Exception("You must specify Tester before trying to get the Setup file.");
 
-            return Path.Combine(Path.GetDirectoryName(TesterPath), "Setups", package.PrettyName + ".cs");
+            return Path.Combine(Path.GetDirectoryName(TesterPath), "Setups", package.GetSetupFileName());
         }
     }
 }

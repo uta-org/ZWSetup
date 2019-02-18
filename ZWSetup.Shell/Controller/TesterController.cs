@@ -44,10 +44,24 @@ namespace ZWSetup.Shell.Controller
                 {
                     new CodeMemberMethod()
                     {
-                        Name = "OnSetup",
+                        Name = PackageConsts.OnSetupMethod,
+                        Attributes = MemberAttributes.Public | MemberAttributes.Static,
+                        Statements = { new CodeExpressionStatement(helloWorld) }
+                    },
+                    new CodeMemberMethod()
+                    {
+                        Name = PackageConsts.OnFinishMethod,
                         Attributes = MemberAttributes.Public | MemberAttributes.Static,
                         Statements = { new CodeExpressionStatement(helloWorld) }
                     }
+                },
+                StartDirectives =
+                {
+                    new CodeRegionDirective(CodeRegionMode.Start, "\nstatic")
+                },
+                EndDirectives =
+                {
+                    new CodeRegionDirective(CodeRegionMode.End, string.Empty)
                 }
             };
 

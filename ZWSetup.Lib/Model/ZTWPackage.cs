@@ -8,6 +8,8 @@ namespace ZWSetup.Lib.Model
 
     public sealed class ZTWPackage
     {
+        public const string Extension = "ztwp";
+
         [JsonIgnore]
         public string Name => Path.GetFileNameWithoutExtension(SolutionPath);
 
@@ -15,7 +17,10 @@ namespace ZWSetup.Lib.Model
         public string SetupPath => this.GetSetupFile();
 
         [JsonIgnore]
-        public string PrettyName => Name.ToLower().FirstCharToUpper();
+        public string SetupFileName => this.GetSetupFileName();
+
+        [JsonIgnore]
+        public string PrettyName => Name.ToLowerInvariant().FirstCharToUpper();
 
         [JsonIgnore]
         public string SetupClass => $"{PrettyName}Setup";
@@ -25,6 +30,12 @@ namespace ZWSetup.Lib.Model
 
         [JsonIgnore]
         public string SetupFullname => $"{SetupNamespace}.{SetupClass}";
+
+        [JsonIgnore]
+        public bool DoesSetupExists => File.Exists(SetupPath);
+
+        [JsonIgnore]
+        public string TempPrefix => $"{PrettyName}_";
 
         [JsonProperty]
         public string SolutionPath { get; set; }
