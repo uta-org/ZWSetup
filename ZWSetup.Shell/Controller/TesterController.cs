@@ -1,5 +1,4 @@
-﻿using Microsoft.Build.Evaluation;
-using System;
+﻿using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.IO;
@@ -99,17 +98,9 @@ namespace ZWSetup.Shell.Controller
             if (overwrite)
                 File.WriteAllText(saveFilePath, text);
 
-            // Then, we will save it on the csproj
+            // Then, we will add the item && save it on the csproj
 
-            // Solved issue thanks to: https://stackoverflow.com/a/44260284/3286975
-
-            Project project = new Project(testerPath);
-
-            string relPath = IOHelper.MakeRelativePath(testerFolderPath, saveFilePath);
-            if (!project.GetItems("Compile").Any(item => item.UnevaluatedInclude == relPath))
-                project.AddItem("Compile", relPath);
-
-            project.Save();
+            RoslynHelper.AddItem(testerPath, testerFolderPath, saveFilePath);
         }
     }
 }
