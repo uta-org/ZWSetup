@@ -21,6 +21,8 @@ namespace ZWSetup.Shell.Pages.Packages
     using FeatureExpansion;
     using Lib.Controller;
     using Lib.Model;
+    using Microsoft.Build.Locator;
+    using Microsoft.CodeAnalysis.CSharp;
     using System.Diagnostics;
 
     public class PackageOperator : MenuPage
@@ -123,25 +125,33 @@ namespace ZWSetup.Shell.Pages.Packages
                 throw new Exception(TesterException);
 
             // Step 0: Check if setup file has the needed methods (OnSetup && OnFinish)
-
-            Assembly asm;
-            if (!GetAssembly(pkg.SetupPath, out asm))
-                return;
-
-            if (!asm.HasMethod(pkg.SetupFullname, PackageConsts.OnSetupMethod) || !asm.HasMethod(pkg.SetupFullname, PackageConsts.OnFinishMethod))
             {
-                Console.WriteLine($"There are missing methods on '{pkg.SetupFullname}' in '{pkg.SetupPath}'. Please, add them before trying to compile.", Color.Red);
+                Assembly asm;
+                if (!GetAssembly(pkg.SetupPath, out asm))
+                    return;
+
+                if (!asm.HasMethod(pkg.SetupFullname, PackageConsts.OnSetupMethod) || !asm.HasMethod(pkg.SetupFullname, PackageConsts.OnFinishMethod))
+                {
+                    Console.WriteLine($"There are missing methods on '{pkg.SetupFullname}' in '{pkg.SetupPath}'. Please, add them before trying to compile.", Color.Red);
+
+                    Exit();
+                    return;
+                }
+            }
+
+            // Step 1: Create a temp folder where everything will be stored
+            string tempFolder = IOHelper.GetTemporaryDirectory(pkg.TempPrefix),
+                   outputDir = CreateFolderStructure(tempFolder);
+
+            // Step 2: Compile solution to generate a exe file (csc)
+            string errorStr;
+            if (!CompileSolution(pkg.SolutionPath, outputDir, out errorStr))
+            {
+                Console.WriteLine(errorStr, Color.Red);
 
                 Exit();
                 return;
             }
-
-            // Step 0.1: Create a temp folder where everything will be stored
-            string tempFolder = IOHelper.GetTemporaryDirectory(pkg.TempPrefix),
-                   outputDir = CreateFolderStructure(tempFolder);
-
-            // Step 1: Compile solution to generate a exe file (csc)
-            CompileSolution(pkg.SolutionPath, outputDir);
 
             // Note: The structure of the package will be as following:
             // root
@@ -149,8 +159,7 @@ namespace ZWSetup.Shell.Pages.Packages
             // Package/
             // files (exe, libs, etc etc)
 
-            // Step 2: Search for the Setup of pkg and copy on this folder
-
+            // Step 3: Search for the Setup of pkg and copy on this folder
             {
                 if (!pkg.DoesSetupExists)
                     throw new Exception(TesterException);
@@ -159,10 +168,10 @@ namespace ZWSetup.Shell.Pages.Packages
                 File.Copy(pkg.SetupPath, Path.Combine(tempFolder, pkg.SetupFileName));
             }
 
-            // Step 3: Zip everything into a ".ztwp" extension file
+            // Step 4: Zip everything into a ".ztwp" extension file
             string compressedFile = CompressionHelper.Zip(tempFolder, Path.GetTempPath(), ZTWPackage.Extension);
 
-            // Step 4: Open file in Explorer
+            // Step 5: Open file in Explorer
 
             //Process.Start($"file://{compressedFile}"); // Search or work in a cross-platform solution for this
             Process.Start(Path.GetTempPath());
@@ -180,38 +189,72 @@ namespace ZWSetup.Shell.Pages.Packages
 
         private static bool CompileSolution(string solutionPath, string outputDir)
         {
+            return CompileSolution(solutionPath, outputDir, false);
+        }
+
+        private static bool CompileSolution(string solutionPath, string outputDir, bool outputErrors = true)
+        {
+            string errorStr;
+            return CompileSolution(solutionPath, outputDir, out errorStr, false);
+        }
+
+        private static bool CompileSolution(string solutionPath, string outputDir, out string errorStr)
+        {
+            return CompileSolution(solutionPath, outputDir, out errorStr, false);
+        }
+
+        private static bool CompileSolution(string solutionPath, string outputDir, out string errorStr, bool outputErrors = true)
+        {
+            errorStr = "";
             bool success = true;
 
-            MSBuildWorkspace workspace = MSBuildWorkspace.Create();
+            //MSBuildLocator.RegisterInstance(RoslynHelper.GetMSBuildInstance());
+
+            // Thanks to: https://stackoverflow.com/a/29550838/3286975
+            var props = new Dictionary<string, string>();
+            props["CheckForSystemRuntimeDependency"] = "true";
+
+            EmitResult result = null;
+            MSBuildWorkspace workspace = MSBuildWorkspace.Create(props);
             Solution solution = workspace.OpenSolutionAsync(solutionPath).Result;
             ProjectDependencyGraph projectGraph = solution.GetProjectDependencyGraph();
-            Dictionary<string, Stream> assemblies = new Dictionary<string, Stream>();
+
+            // Thanks to: https://stackoverflow.com/q/46032472/3286975
+            workspace.WorkspaceFailed += (sender, eventArgs) =>
+            {
+                Console.WriteLine($"{eventArgs.Diagnostic.Kind}: {eventArgs.Diagnostic.Message}", Color.Red);
+                Console.WriteLine();
+            };
+
+            // workspace.LoadMetadataForReferencedProjects = true;
 
             foreach (ProjectId projectId in projectGraph.GetTopologicallySortedProjects())
             {
                 var project = solution.GetProject(projectId);
-                Compilation projectCompilation = project.GetCompilationAsync().Result;
+                CSharpCompilation projectCompilation = project.GetCompilationAsync().Result as CSharpCompilation; //).DoRequired(project);
+
+                projectCompilation.FindAllMissingReferences(solution, project);
 
                 string projectPath = project.FilePath;
                 Project evProject = !string.IsNullOrEmpty(projectPath) ? new Project(projectPath) : null;
 
                 bool isDLL = evProject == null || evProject.GetItems("OutputType").Any(item => item.ToString() == "Library");
 
-                if (null != projectCompilation && !string.IsNullOrEmpty(projectCompilation.AssemblyName))
+                if (projectCompilation != null && !string.IsNullOrEmpty(projectCompilation.AssemblyName))
                 {
                     using (var stream = new MemoryStream())
+                    using (var pdbStream = new MemoryStream())
                     {
-                        EmitResult result = projectCompilation.Emit(stream);
+                        result = projectCompilation.Emit(stream, pdbStream);
+
                         if (result.Success)
                         {
                             // Test (exe or dll)
-                            string fileName = $"{projectCompilation.AssemblyName}.{(isDLL ? "dll" : "exe")}";
+                            string fileName = $"{projectCompilation.AssemblyName}.{(isDLL ? "dll" : "exe")}",
+                                   pdbFile = $"{projectCompilation.AssemblyName}.pdb";
 
-                            using (FileStream file = File.Create(outputDir + '\\' + fileName))
-                            {
-                                stream.Seek(0, SeekOrigin.Begin);
-                                stream.CopyTo(file);
-                            }
+                            stream.WriteToFile(outputDir, fileName);
+                            pdbStream.WriteToFile(outputDir, pdbFile);
                         }
                         else
                             success = false;
@@ -219,6 +262,13 @@ namespace ZWSetup.Shell.Pages.Packages
                 }
                 else
                     success = false;
+
+                if (!success)
+                {
+                    errorStr = result?.VerifyCompilationResults();
+                    if (outputErrors)
+                        Console.WriteLine(errorStr, Color.Red);
+                }
             }
 
             return success;
