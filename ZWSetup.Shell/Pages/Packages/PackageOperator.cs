@@ -228,6 +228,8 @@ namespace ZWSetup.Shell.Pages.Packages
 
             // workspace.LoadMetadataForReferencedProjects = true;
 
+            RoslynHelper.StartDebugging();
+
             foreach (ProjectId projectId in projectGraph.GetTopologicallySortedProjects())
             {
                 var project = solution.GetProject(projectId);
@@ -270,6 +272,8 @@ namespace ZWSetup.Shell.Pages.Packages
                         Console.WriteLine(errorStr, Color.Red);
                 }
             }
+
+            RoslynHelper.EndDebugging();
 
             return success;
         }
