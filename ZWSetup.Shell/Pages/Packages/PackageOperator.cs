@@ -148,6 +148,7 @@ namespace ZWSetup.Shell.Pages.Packages
             string outputLog;
             bool isSuccesful = CompilerHelper.Compile(pkg.SolutionPath, outputDir, out outputLog);
 
+            Console.WriteLine(!isSuccesful ? "Has errors." : "Is succesful.", !isSuccesful ? Color.Red : Color.DarkGreen);
             Console.WriteLine(outputLog, isSuccesful ? Color.DarkGreen : Color.Red);
 
             if (!isSuccesful)
@@ -155,15 +156,6 @@ namespace ZWSetup.Shell.Pages.Packages
                 Exit();
                 return;
             }
-
-            //string errorStr;
-            //if (!CompileSolution(pkg.SolutionPath, outputDir, out errorStr))
-            //{
-            //    Console.WriteLine(errorStr, Color.Red);
-
-            //    Exit();
-            //    return;
-            //}
 
             // Note: The structure of the package will be as following:
             // root
@@ -198,97 +190,6 @@ namespace ZWSetup.Shell.Pages.Packages
 
             return path;
         }
-
-        //private static bool CompileSolution(string solutionPath, string outputDir)
-        //{
-        //    return CompileSolution(solutionPath, outputDir, false);
-        //}
-
-        //private static bool CompileSolution(string solutionPath, string outputDir, bool outputErrors = true)
-        //{
-        //    string errorStr;
-        //    return CompileSolution(solutionPath, outputDir, out errorStr, false);
-        //}
-
-        //private static bool CompileSolution(string solutionPath, string outputDir, out string errorStr)
-        //{
-        //    return CompileSolution(solutionPath, outputDir, out errorStr, false);
-        //}
-
-        //private static bool CompileSolution(string solutionPath, string outputDir, out string errorStr, bool outputErrors = true)
-        //{
-        //    errorStr = "";
-        //    bool success = true;
-
-        //    //MSBuildLocator.RegisterInstance(RoslynHelper.GetMSBuildInstance());
-
-        //    // Thanks to: https://stackoverflow.com/a/29550838/3286975
-        //    var props = new Dictionary<string, string>();
-        //    props["CheckForSystemRuntimeDependency"] = "true";
-
-        //    EmitResult result = null;
-        //    MSBuildWorkspace workspace = MSBuildWorkspace.Create(props);
-        //    Solution solution = workspace.OpenSolutionAsync(solutionPath).Result;
-        //    ProjectDependencyGraph projectGraph = solution.GetProjectDependencyGraph();
-
-        //    // Thanks to: https://stackoverflow.com/q/46032472/3286975
-        //    workspace.WorkspaceFailed += (sender, eventArgs) =>
-        //    {
-        //        Console.WriteLine($"{eventArgs.Diagnostic.Kind}: {eventArgs.Diagnostic.Message}", Color.Red);
-        //        Console.WriteLine();
-        //    };
-
-        //    // workspace.LoadMetadataForReferencedProjects = true;
-
-        //    RoslynHelper.StartDebugging();
-
-        //    foreach (ProjectId projectId in projectGraph.GetTopologicallySortedProjects())
-        //    {
-        //        var project = solution.GetProject(projectId);
-        //        CSharpCompilation projectCompilation = project.GetCompilationAsync().Result as CSharpCompilation; //).DoRequired(project);
-
-        //        projectCompilation.FindAllMissingReferences(solution, project);
-
-        //        string projectPath = project.FilePath;
-        //        Project evProject = !string.IsNullOrEmpty(projectPath) ? new Project(projectPath) : null;
-
-        //        bool isDLL = evProject == null || evProject.GetItems("OutputType").Any(item => item.ToString() == "Library");
-
-        //        if (projectCompilation != null && !string.IsNullOrEmpty(projectCompilation.AssemblyName))
-        //        {
-        //            using (var stream = new MemoryStream())
-        //            using (var pdbStream = new MemoryStream())
-        //            {
-        //                result = projectCompilation.Emit(stream, pdbStream);
-
-        //                if (result.Success)
-        //                {
-        //                    // Test (exe or dll)
-        //                    string fileName = $"{projectCompilation.AssemblyName}.{(isDLL ? "dll" : "exe")}",
-        //                           pdbFile = $"{projectCompilation.AssemblyName}.pdb";
-
-        //                    stream.WriteToFile(outputDir, fileName);
-        //                    pdbStream.WriteToFile(outputDir, pdbFile);
-        //                }
-        //                else
-        //                    success = false;
-        //            }
-        //        }
-        //        else
-        //            success = false;
-
-        //        if (!success)
-        //        {
-        //            errorStr = result?.VerifyCompilationResults();
-        //            if (outputErrors)
-        //                Console.WriteLine(errorStr, Color.Red);
-        //        }
-        //    }
-
-        //    RoslynHelper.EndDebugging();
-
-        //    return success;
-        //}
 
         private static void Exit()
         {
