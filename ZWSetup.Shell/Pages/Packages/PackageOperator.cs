@@ -145,11 +145,7 @@ namespace ZWSetup.Shell.Pages.Packages
                    outputDir = CreateFolderStructure(tempFolder);
 
             // Step 2: Compile solution to generate a exe file (csc)
-            string outputLog;
-            bool isSuccesful = CompilerHelper.Compile(pkg.SolutionPath, outputDir, out outputLog);
-
-            Console.WriteLine(!isSuccesful ? "Has errors." : "Is succesful.", !isSuccesful ? Color.Red : Color.DarkGreen);
-            Console.WriteLine(outputLog, isSuccesful ? Color.DarkGreen : Color.Red);
+            bool isSuccesful = CompilerHelper.Compile(pkg.SolutionPath, outputDir);
 
             if (!isSuccesful)
             {
