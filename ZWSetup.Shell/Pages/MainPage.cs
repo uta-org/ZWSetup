@@ -7,6 +7,7 @@ namespace ZWSetup.Shell.Pages
 {
     using FeatureExpansion;
     using Lib.Controller;
+    using uzLib.Lite.UnitTesting;
 
     public class MainPage : MenuPage
     {
@@ -24,6 +25,7 @@ namespace ZWSetup.Shell.Pages
         {
             yield return new Option("Enter Package Manager", () => program.NavigateTo<PackageManager>());
             yield return new Option("Enter Package Creator", () => program.NavigateTo<PackageCreator>());
+            yield return new Option("Execute Tests in Console", TestsInConsole);
             yield return new Option("Exit Application", SafeExit);
         }
 
@@ -31,6 +33,11 @@ namespace ZWSetup.Shell.Pages
         {
             SettingsController.SaveSettings();
             Environment.Exit(0);
+        }
+
+        public static void TestsInConsole()
+        {
+            MSBuildTests.CreateTest();
         }
     }
 }
