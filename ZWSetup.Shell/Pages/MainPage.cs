@@ -25,7 +25,7 @@ namespace ZWSetup.Shell.Pages
         {
             yield return new Option("Enter Package Manager", () => program.NavigateTo<PackageManager>());
             yield return new Option("Enter Package Creator", () => program.NavigateTo<PackageCreator>());
-            yield return new Option("Execute Tests in Console", TestsInConsole);
+            //yield return new Option("Execute Tests in Console", () => TestsInConsole(program));
             yield return new Option("Exit Application", SafeExit);
         }
 
@@ -35,9 +35,11 @@ namespace ZWSetup.Shell.Pages
             Environment.Exit(0);
         }
 
-        public static void TestsInConsole()
+        public static void TestsInConsole(UpdatableProgram program)
         {
             MSBuildTests.CreateTest();
+
+            program.NavigateBack();
         }
     }
 }
