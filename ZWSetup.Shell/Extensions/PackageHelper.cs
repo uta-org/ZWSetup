@@ -1,6 +1,8 @@
 ﻿using EasyConsole;
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ZWSetup.Shell.Extensions
 {
@@ -35,6 +37,11 @@ namespace ZWSetup.Shell.Extensions
 
             // Then, get page, and setpackage
             return (packageAware.Program as UpdatableProgram).GetPage<T>().SetPackage(PackageController.CurrentPackage);
+        }
+
+        public static JObject GetObjectFromAPIResponse(string jsonResponse)
+        {
+            return JsonConvert.DeserializeObject(jsonResponse) as JObject;
         }
     }
 }
