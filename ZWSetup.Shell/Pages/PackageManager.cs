@@ -1,4 +1,5 @@
 ﻿using EasyConsole;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Drawing;
@@ -18,9 +19,7 @@ namespace ZWSetup.Shell.Pages
     {
         private const string SearchURL = "https://api.github.com/search/repositories?q=topic:zwtp";
         private const string AcceptHeader = "application/vnd.github.cloak-preview";
-        //private static Header AcceptHeader { get; } = new Header("Accept", "application/vnd.github.cloak-preview");
 
-        // public string APIResponse { get; private set; }
         public static JObject JSONObject { get; private set; }
 
         private PackageManager()
@@ -33,7 +32,7 @@ namespace ZWSetup.Shell.Pages
         {
         }
 
-        public static IEnumerable<Option> GetOptions(UpdatableProgram program)
+        private static IEnumerable<Option> GetOptions(UpdatableProgram program)
         {
             JSONObject = PackageHelper.GetObjectFromAPIResponse(SearchURL.MakeRequest(AcceptHeader));
 
@@ -41,16 +40,40 @@ namespace ZWSetup.Shell.Pages
                 yield break;
 
             foreach (var repoItem in JSONObject["items"].Cast<JObject>())
-                yield return new Option(repoItem["name"].ToObject<string>(), null);
+            {
+                string name = repoItem["name"].ToObject<string>(),
+                       url = repoItem["owner"]["html_url"].ToObject<string>();
+
+                yield return new Option(name, () => SelectRepo(repoItem));
+            }
         }
 
-        /*public override void Display()
+        private static void SelectRepo(JObject repoItem)
         {
-            //Console.WriteLine("This page is still in development. Going back after pressing any key...", Color.Yellow);
-            //Console.Read();
+            string name = repoItem["name"].ToObject<string>(),
+                   url = repoItem["owner"]["html_url"].ToObject<string>(),
+                   full_url = $"{url}/{name}",
+                   downloadString = GetDownloadLink(repoItem["full_name"].ToObject<string>());
 
-            // This doesn't be casted as UpdatableProgram
-            Program.NavigateBack();
-        }*/
+            // TODO: Download the repo (if the user agrees)
+
+            // TODO: Extract the package under Local > UTA > ZWSetup folder (where the user.config is) > crete a folder for this package and extract it
+
+            // TODO: Execute OnSetup (it will display hello world!)
+
+            Console.WriteLine(url);
+            Console.Read();
+        }
+
+        private static string GetDownloadLink(string fullname)
+        {
+            string apiURL = $"https://api.github.com/repos/{fullname}/releases";
+
+            var jArr = JsonConvert.DeserializeObject<JArray>(apiURL.MakeRequest());
+
+            // TODO: Ensure the last release download
+            // TODO: Check if asset has the needed "ztwp" extension
+            return (jArr[0]["assets"] as JArray)[0]["browser_download_url"].ToObject<string>();
+        }
     }
 }

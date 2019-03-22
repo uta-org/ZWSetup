@@ -41,7 +41,7 @@ namespace ZWSetup.Shell.Extensions
 
         public static JObject GetObjectFromAPIResponse(string jsonResponse)
         {
-            return JsonConvert.DeserializeObject(jsonResponse) as JObject;
+            return JsonConvert.DeserializeObject<JObject>(jsonResponse);
         }
     }
 }
