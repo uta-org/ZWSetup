@@ -2,13 +2,12 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using uzLib.Lite.Extensions;
 
-using Console = Colorful.Console;
+//using System.Drawing;
 
-//using Header = System.Tuple<string, string>;
+using Console = Colorful.Console;
 
 namespace ZWSetup.Shell.Pages
 {
@@ -40,12 +39,7 @@ namespace ZWSetup.Shell.Pages
                 yield break;
 
             foreach (var repoItem in JSONObject["items"].Cast<JObject>())
-            {
-                string name = repoItem["name"].ToObject<string>(),
-                       url = repoItem["owner"]["html_url"].ToObject<string>();
-
-                yield return new Option(name, () => SelectRepo(repoItem));
-            }
+                yield return new Option(repoItem["name"].ToObject<string>(), () => SelectRepo(repoItem));
         }
 
         private static void SelectRepo(JObject repoItem)
@@ -61,7 +55,7 @@ namespace ZWSetup.Shell.Pages
 
             // TODO: Execute OnSetup (it will display hello world!)
 
-            Console.WriteLine(url);
+            Console.WriteLine(downloadString);
             Console.Read();
         }
 
@@ -72,7 +66,7 @@ namespace ZWSetup.Shell.Pages
             var jArr = JsonConvert.DeserializeObject<JArray>(apiURL.MakeRequest());
 
             // TODO: Ensure the last release download
-            // TODO: Check if asset has the needed "ztwp" extension
+            // TODO: Ensure that the selected release has the needed "ztwp" extension
             return (jArr[0]["assets"] as JArray)[0]["browser_download_url"].ToObject<string>();
         }
     }
