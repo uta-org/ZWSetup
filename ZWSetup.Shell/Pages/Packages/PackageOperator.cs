@@ -1,11 +1,5 @@
 ﻿using EasyConsole;
-using Microsoft.CSharp;
-
-//using Microsoft.CodeAnalysis;
-//using Microsoft.CodeAnalysis.Emit;
-//using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
 using System;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -15,16 +9,13 @@ using System.Reflection;
 using uzLib.Lite.Extensions;
 using Console = Colorful.Console;
 
-//using Project = Microsoft.Build.Evaluation.Project;
-
 namespace ZWSetup.Shell.Pages.Packages
 {
     using Controller;
     using FeatureExpansion;
     using Lib.Controller;
     using Lib.Model;
-
-    //using Microsoft.CodeAnalysis.CSharp;
+    using Extensions;
 
     public class PackageOperator : MenuPage
     {
@@ -65,55 +56,15 @@ namespace ZWSetup.Shell.Pages.Packages
                 throw new Exception(TesterException);
 
             Assembly asm;
-            if (!GetAssembly(pkg.SetupPath, out asm))
+            if (!PackageHelper.GetAssembly(pkg.SetupPath, out asm))
+            {
+                CurrentProgram.Exit();
                 return;
+            }
 
             asm.InvokeStaticMethod(pkg.SetupFullname, "OnSetup");
 
-            Exit();
-        }
-
-        private static bool GetAssembly(string path, out Assembly assembly, bool outputErrors = true)
-        {
-            bool hasErrors;
-            CompilerResults results = GetCompilerResults(path, outputErrors, out hasErrors);
-
-            if (hasErrors)
-            {
-                assembly = null;
-                return false;
-            }
-
-            assembly = results.CompiledAssembly;
-            return true;
-        }
-
-        private static CompilerResults GetCompilerResults(string path, bool outputErrors)
-        {
-            bool hasErrors;
-            return GetCompilerResults(path, outputErrors, out hasErrors);
-        }
-
-        private static CompilerResults GetCompilerResults(string path, bool outputErrors, out bool hasErrors)
-        {
-            CodeDomProvider objCodeCompiler = new CSharpCodeProvider();
-            CompilerParameters objCompilerParameters = new CompilerParameters();
-            CompilerResults results = objCodeCompiler.CompileAssemblyFromFile(objCompilerParameters, path);
-
-            if (!results.Errors.Cast<CompilerError>().IsNullOrEmpty())
-            {
-                if (outputErrors)
-                    foreach (CompilerError error in results.Errors)
-                        Console.WriteLine(error);
-
-                Exit();
-
-                hasErrors = true;
-                return null;
-            }
-
-            hasErrors = false;
-            return results;
+            CurrentProgram.Exit();
         }
 
         private static void Compile()
@@ -128,14 +79,17 @@ namespace ZWSetup.Shell.Pages.Packages
             // Step 0: Check if setup file has the needed methods (OnSetup && OnFinish)
             {
                 Assembly asm;
-                if (!GetAssembly(pkg.SetupPath, out asm))
+                if (!PackageHelper.GetAssembly(pkg.SetupPath, out asm))
+                {
+                    CurrentProgram.Exit();
                     return;
+                }
 
                 if (!asm.HasMethod(pkg.SetupFullname, PackageConsts.OnSetupMethod) || !asm.HasMethod(pkg.SetupFullname, PackageConsts.OnFinishMethod))
                 {
                     Console.WriteLine($"There are missing methods on '{pkg.SetupFullname}' in '{pkg.SetupPath}'. Please, add them before trying to compile.", Color.Red);
 
-                    Exit();
+                    CurrentProgram.Exit();
                     return;
                 }
             }
@@ -149,7 +103,7 @@ namespace ZWSetup.Shell.Pages.Packages
 
             if (!isSuccesful)
             {
-                Exit();
+                CurrentProgram.Exit();
                 return;
             }
 
@@ -176,7 +130,7 @@ namespace ZWSetup.Shell.Pages.Packages
             //Process.Start($"file://{compressedFile}"); // Search or work in a cross-platform solution for this
             Process.Start(Path.GetTempPath());
 
-            Exit();
+            CurrentProgram.Exit();
         }
 
         private static string CreateFolderStructure(string tempFolder)
@@ -185,14 +139,6 @@ namespace ZWSetup.Shell.Pages.Packages
             Directory.CreateDirectory(path);
 
             return path;
-        }
-
-        private static void Exit()
-        {
-            Console.WriteLine("Press any key to go back...");
-            Console.Read();
-
-            CurrentProgram.NavigateBack();
         }
     }
 }

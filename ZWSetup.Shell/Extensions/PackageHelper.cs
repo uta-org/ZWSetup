@@ -3,6 +3,11 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Microsoft.CSharp;
+using System.CodeDom.Compiler;
+using System.Linq;
+using System.Reflection;
+using uzLib.Lite.Extensions;
 
 namespace ZWSetup.Shell.Extensions
 {
@@ -43,5 +48,60 @@ namespace ZWSetup.Shell.Extensions
         {
             return JsonConvert.DeserializeObject<JObject>(jsonResponse);
         }
+
+        internal static void Exit(this Program CurrentProgram)
+        {
+            Console.WriteLine("Press any key to go back...");
+            Console.Read();
+
+            CurrentProgram.NavigateBack();
+        }
+
+        // ===================================================================================
+        // =================              Compile *.cs files                 =================
+        // ===================================================================================
+
+        internal static bool GetAssembly(string path, out Assembly assembly, bool outputErrors = true)
+        {
+            bool hasErrors;
+            CompilerResults results = GetCompilerResults(path, outputErrors, out hasErrors);
+
+            if (hasErrors)
+            {
+                assembly = null;
+                return false;
+            }
+
+            assembly = results.CompiledAssembly;
+            return true;
+        }
+
+        internal static CompilerResults GetCompilerResults(string path, bool outputErrors)
+        {
+            bool hasErrors;
+            return GetCompilerResults(path, outputErrors, out hasErrors);
+        }
+
+        internal static CompilerResults GetCompilerResults(string path, bool outputErrors, out bool hasErrors)
+        {
+            CodeDomProvider objCodeCompiler = new CSharpCodeProvider();
+            CompilerParameters objCompilerParameters = new CompilerParameters();
+            CompilerResults results = objCodeCompiler.CompileAssemblyFromFile(objCompilerParameters, path);
+
+            if (!results.Errors.Cast<CompilerError>().IsNullOrEmpty())
+            {
+                if (outputErrors)
+                    foreach (CompilerError error in results.Errors)
+                        Console.WriteLine(error);
+
+                hasErrors = true;
+                return null;
+            }
+
+            hasErrors = false;
+            return results;
+        }
+
+        // ===================================================================================
     }
 }

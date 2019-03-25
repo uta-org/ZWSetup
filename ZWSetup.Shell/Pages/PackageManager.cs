@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using uzLib.Lite.Extensions;
 
 //using System.Drawing;
@@ -13,6 +14,9 @@ namespace ZWSetup.Shell.Pages
 {
     using FeatureExpansion;
     using Extensions;
+    using System.CodeDom.Compiler;
+    using System.Reflection;
+    using Microsoft.CSharp;
 
     public class PackageManager : UpdatableMenuPage
     {
@@ -21,14 +25,17 @@ namespace ZWSetup.Shell.Pages
 
         public static JObject JSONObject { get; private set; }
 
+        private static UpdatableProgram CurrentProgram { get; set; }
+
         private PackageManager()
             : base("", null, null)
         {
         }
 
         public PackageManager(UpdatableProgram program)
-            : base("Main Page", program, GetOptions)
+            : base("Package Manager (select any package to download)", program, GetOptions)
         {
+            CurrentProgram = program;
         }
 
         private static IEnumerable<Option> GetOptions(UpdatableProgram program)
@@ -50,13 +57,48 @@ namespace ZWSetup.Shell.Pages
                    downloadString = GetDownloadLink(repoItem["full_name"].ToObject<string>());
 
             // TODO: Download the repo (if the user agrees)
+            string packagePath = Path.Combine(Path.GetTempPath(), Path.GetFileName(downloadString));
+
+            if(!File.Exists(packagePath))
+                NetHelper.DownloadFile(downloadString, packagePath);
 
             // TODO: Extract the package under Local > UTA > ZWSetup folder (where the user.config is) > crete a folder for this package and extract it
+            string destination = GetDestination(name);
+
+            if(destination.IsDirectoryEmptyOrNull())
+                CompressionHelper.Unzip(packagePath, destination);
 
             // TODO: Execute OnSetup (it will display hello world!)
+            string setupFile = GetSetupFile(destination);
+            Assembly asm;
+            if (!PackageHelper.GetAssembly(setupFile, out asm))
+            {
+                CurrentProgram.Exit();
+                return;
+            }
+
+            // asm.InvokeStaticMethod(pkg.SetupFullname, "OnSetup");
 
             Console.WriteLine(downloadString);
             Console.Read();
+        }
+
+        private static string GetDestination(string packageName)
+        {
+            string destination = Path.Combine(ProgramHelper.ConfigPath, packageName);
+
+            if (!Directory.Exists(destination))
+                Directory.CreateDirectory(destination);
+
+            return destination;
+        }
+
+        // TODO: Remove this (create a mapping JSON file for dependencies, *.cs used files && ZTWPackage instance, like a SLN file)
+        private static string GetSetupFile(string destination)
+        {
+            var files = Directory.GetFiles(destination, "*.cs", SearchOption.TopDirectoryOnly);
+
+            return files.FirstOrDefault(f => f.Contains("Setup"));
         }
 
         private static string GetDownloadLink(string fullname)

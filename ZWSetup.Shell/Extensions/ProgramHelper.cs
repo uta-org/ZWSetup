@@ -1,5 +1,6 @@
 ﻿using EasyConsole;
 using System;
+using System.Configuration;
 
 namespace ZWSetup.Shell.Extensions
 {
@@ -7,6 +8,8 @@ namespace ZWSetup.Shell.Extensions
 
     public static class ProgramHelper
     {
+        public static string ConfigPath { get; } = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoaming).FilePath;
+
         private const string OnlyUpdatableProgramException = "This extension must be used only with UpdatableProgram.";
 
         public static void NavigateTo<T>(this Page page)
