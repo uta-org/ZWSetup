@@ -56,19 +56,19 @@ namespace ZWSetup.Shell.Pages
                    full_url = $"{url}/{name}",
                    downloadString = GetDownloadLink(repoItem["full_name"].ToObject<string>());
 
-            // TODO: Download the repo (if the user agrees)
+            // Download the repo (if the user agrees)
             string packagePath = Path.Combine(Path.GetTempPath(), Path.GetFileName(downloadString));
 
             if(!File.Exists(packagePath))
                 NetHelper.DownloadFile(downloadString, packagePath);
 
-            // TODO: Extract the package under Local > UTA > ZWSetup folder (where the user.config is) > crete a folder for this package and extract it
+            // Extract the package under Local > UTA > ZWSetup folder (where the user.config is) > crete a folder for this package and extract it
             string destination = GetDestination(name);
 
             if(destination.IsDirectoryEmptyOrNull())
                 CompressionHelper.Unzip(packagePath, destination);
 
-            // TODO: Execute OnSetup (it will display hello world!)
+            // Execute OnSetup (it will display hello world!)
             string setupFile = GetSetupFile(destination);
             Assembly asm;
             if (!PackageHelper.GetAssembly(setupFile, out asm))

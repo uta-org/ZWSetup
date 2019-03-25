@@ -8,7 +8,8 @@ namespace ZWSetup.Lib.Model
 
     public sealed class ZTWPackage
     {
-        public const string Extension = "ztwp";
+        [JsonIgnore]
+        public static string Extension { get; } = "ztwp";
 
         [JsonIgnore]
         public string Name => Path.GetFileNameWithoutExtension(SolutionPath);

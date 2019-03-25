@@ -1,4 +1,5 @@
 ﻿using EasyConsole;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -95,7 +96,7 @@ namespace ZWSetup.Shell.Pages.Packages
             }
 
             // Step 1: Create a temp folder where everything will be stored
-            string tempFolder = IOHelper.GetTemporaryDirectory(pkg.TempPrefix),
+            string tempFolder = IOHelper.GetTemporaryDirectory(pkg.TempPrefix, "", false),
                    outputDir = CreateFolderStructure(tempFolder);
 
             // Step 2: Compile solution to generate a exe file (csc)
@@ -109,21 +110,29 @@ namespace ZWSetup.Shell.Pages.Packages
 
             // Note: The structure of the package will be as following:
             // root
+            // info.json
             // (pkgName)Setup.cs
             // Package/
             // files (exe, libs, etc etc)
 
-            // Step 3: Search for the Setup of pkg and copy on this folder
+            // Step 3: Search for the Setup of pkg and copy on this folder and generate needed files
             {
                 if (!pkg.DoesSetupExists)
                     throw new Exception(TesterException);
 
-                // We will only copy the Setup file.
+                // We will only copy the *Setup.cs file.
                 File.Copy(pkg.SetupPath, Path.Combine(tempFolder, pkg.SetupFileName));
+
+                // Then, we will generate info.json and copy into the folder
+                File.WriteAllText(Path.Combine(tempFolder, "info.json"), JsonConvert.SerializeObject(pkg));
             }
 
             // Step 4: Zip everything into a ".ztwp" extension file
             string compressedFile = CompressionHelper.Zip(tempFolder, Path.GetTempPath(), ZTWPackage.Extension);
+
+            // Step 4.1: Remove Directory
+            if (!IOHelper.EmptyFolder(tempFolder))
+                throw new Exception("Couldn't empty the temp folder!");
 
             // Step 5: Open file in Explorer
 
