@@ -1,9 +1,11 @@
 ﻿using EasyConsole;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Reflection;
 using uzLib.Lite.Extensions;
 
 //using System.Drawing;
@@ -14,9 +16,7 @@ namespace ZWSetup.Shell.Pages
 {
     using FeatureExpansion;
     using Extensions;
-    using System.CodeDom.Compiler;
-    using System.Reflection;
-    using Microsoft.CSharp;
+    using Lib.Model;
 
     public class PackageManager : UpdatableMenuPage
     {
@@ -69,15 +69,15 @@ namespace ZWSetup.Shell.Pages
                 CompressionHelper.Unzip(packagePath, destination);
 
             // Execute OnSetup (it will display hello world!)
-            string setupFile = GetSetupFile(destination);
+            var pkg = ParsePackage(destination);
             Assembly asm;
-            if (!PackageHelper.GetAssembly(setupFile, out asm))
+            if (!PackageHelper.GetAssembly(pkg.SetupPath, out asm))
             {
                 CurrentProgram.Exit();
                 return;
             }
 
-            // asm.InvokeStaticMethod(pkg.SetupFullname, "OnSetup");
+            asm.InvokeStaticMethod(pkg.SetupFullname, "OnSetup");
 
             Console.WriteLine(downloadString);
             Console.Read();
@@ -94,11 +94,14 @@ namespace ZWSetup.Shell.Pages
         }
 
         // TODO: Remove this (create a mapping JSON file for dependencies, *.cs used files && ZTWPackage instance, like a SLN file)
-        private static string GetSetupFile(string destination)
+        private static ZTWPackage ParsePackage(string destination)
         {
-            var files = Directory.GetFiles(destination, "*.cs", SearchOption.TopDirectoryOnly);
+            var infoJSON = Directory.GetFiles(destination, "info.json", SearchOption.TopDirectoryOnly);
 
-            return files.FirstOrDefault(f => f.Contains("Setup"));
+            if (infoJSON.Length == 0)
+                throw new Exception("Unable to find info.json -- package is corrupt!");
+
+            return JsonConvert.DeserializeObject<ZTWPackage>(File.ReadAllText(infoJSON[0]));
         }
 
         private static string GetDownloadLink(string fullname)
