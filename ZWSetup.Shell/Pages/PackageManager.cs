@@ -68,7 +68,7 @@ namespace ZWSetup.Shell.Pages
             if(destination.IsDirectoryEmptyOrNull())
                 CompressionHelper.Unzip(packagePath, destination);
 
-            // Execute OnSetup (it will display hello world!)
+            // Execute OnSetup
             var pkg = ParsePackage(destination);
             Assembly asm;
             if (!PackageHelper.GetAssembly(pkg.SetupPath, out asm))
@@ -79,8 +79,8 @@ namespace ZWSetup.Shell.Pages
 
             asm.InvokeStaticMethod(pkg.SetupFullname, "OnSetup");
 
-            Console.WriteLine(downloadString);
-            Console.Read();
+            // Exit after executing OnSetup
+            CurrentProgram.Exit();
         }
 
         private static string GetDestination(string packageName)
