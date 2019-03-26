@@ -46,10 +46,10 @@ namespace ZWSetup.Shell.Pages
                 yield break;
 
             foreach (var repoItem in JSONObject["items"].Cast<JObject>())
-                yield return new Option(repoItem["name"].ToObject<string>(), () => SelectRepo(repoItem));
+                yield return new Option(repoItem["name"].ToObject<string>(), () => DownloadItem(repoItem));
         }
 
-        private static void SelectRepo(JObject repoItem)
+        private static void DownloadItem(JObject repoItem)
         {
             string name = repoItem["name"].ToObject<string>(),
                    url = repoItem["owner"]["html_url"].ToObject<string>(),
@@ -59,19 +59,19 @@ namespace ZWSetup.Shell.Pages
             // Download the repo (if the user agrees)
             string packagePath = Path.Combine(Path.GetTempPath(), Path.GetFileName(downloadString));
 
-            if(!File.Exists(packagePath))
+            if (!File.Exists(packagePath))
                 NetHelper.DownloadFile(downloadString, packagePath);
 
             // Extract the package under Local > UTA > ZWSetup folder (where the user.config is) > crete a folder for this package and extract it
             string destination = GetDestination(name);
 
-            if(destination.IsDirectoryEmptyOrNull())
+            if (destination.IsDirectoryEmptyOrNull())
                 CompressionHelper.Unzip(packagePath, destination);
 
             // Execute OnSetup
             var pkg = ParsePackage(destination);
             Assembly asm;
-            if (!PackageHelper.GetAssembly(pkg.SetupPath, out asm))
+            if (!PackageHelper.GetAssembly(pkg, out asm))
             {
                 CurrentProgram.Exit();
                 return;

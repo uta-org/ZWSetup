@@ -11,18 +11,35 @@
 namespace ZWSetup.Package.Quickfork
 {
     using System;
-    
+    using System.IO;
+    using System.Net;
+    using System.Linq;
+    using System.Xml.Linq;
+
     public static class QuickforkSetup
     {
-        
         public static void OnSetup()
         {
-            Console.WriteLine("Hello world!");
+            string outputPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "test.xml");
+
+            XDocument doc = XDocument.Parse(GetPastebin());
+
+            doc.Descendants("UserCustomizations").First().Add(new XElement("add"));
+
+            // File.WriteAllText(outputPath, );
         }
 
         public static void OnFinish()
         {
 
+        }
+
+        // TODO: Remove this
+        // TODO: Get currentsettings.vssettings from computer (I have to research)
+        private static string GetPastebin()
+        {
+            WebClient client = new WebClient();
+            return client.DownloadString("https://pastebin.com/raw/8E4v16Wu");
         }
     }
 }

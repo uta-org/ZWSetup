@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.IO;
 using uzLib.Lite.Extensions;
 
@@ -40,6 +41,9 @@ namespace ZWSetup.Lib.Model
 
         [JsonProperty]
         public string SolutionPath { get; set; }
+
+        [JsonProperty]
+        public List<string> References { get; set; }
 
         private ZTWPackage()
         {

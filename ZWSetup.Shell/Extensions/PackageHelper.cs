@@ -61,10 +61,10 @@ namespace ZWSetup.Shell.Extensions
         // =================              Compile *.cs files                 =================
         // ===================================================================================
 
-        internal static bool GetAssembly(string path, out Assembly assembly, bool outputErrors = true)
+        internal static bool GetAssembly(ZTWPackage package, out Assembly assembly, bool outputErrors = true)
         {
             bool hasErrors;
-            CompilerResults results = GetCompilerResults(path, outputErrors, out hasErrors);
+            CompilerResults results = GetCompilerResults(package, outputErrors, out hasErrors);
 
             if (hasErrors)
             {
@@ -76,17 +76,20 @@ namespace ZWSetup.Shell.Extensions
             return true;
         }
 
-        internal static CompilerResults GetCompilerResults(string path, bool outputErrors)
+        internal static CompilerResults GetCompilerResults(ZTWPackage package, bool outputErrors)
         {
             bool hasErrors;
-            return GetCompilerResults(path, outputErrors, out hasErrors);
+            return GetCompilerResults(package, outputErrors, out hasErrors);
         }
 
-        internal static CompilerResults GetCompilerResults(string path, bool outputErrors, out bool hasErrors)
+        internal static CompilerResults GetCompilerResults(ZTWPackage package, bool outputErrors, out bool hasErrors)
         {
-            CodeDomProvider objCodeCompiler = new CSharpCodeProvider();
-            CompilerParameters objCompilerParameters = new CompilerParameters();
-            CompilerResults results = objCodeCompiler.CompileAssemblyFromFile(objCompilerParameters, path);
+            var provider = new CSharpCodeProvider();
+            CompilerParameters parameters = new CompilerParameters();
+
+            parameters.ReferencedAssemblies.AddRange(package.References.ToArray());
+
+            CompilerResults results = provider.CompileAssemblyFromFile(parameters, package.SetupPath);
 
             if (!results.Errors.Cast<CompilerError>().IsNullOrEmpty())
             {

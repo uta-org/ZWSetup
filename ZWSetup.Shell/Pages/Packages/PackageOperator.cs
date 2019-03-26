@@ -45,7 +45,55 @@ namespace ZWSetup.Shell.Pages.Packages
         public static IEnumerable<Option> GetOptions(UpdatableProgram program)
         {
             yield return new Option("Test", Test);
+            yield return new Option("Add new references", AddReferences);
             yield return new Option("Create ztwp file (compile)", Compile);
+        }
+
+        private static void AddReferences()
+        {
+            // Retrieve the selected package
+            var pkg = PackageController.CurrentPackage;
+            bool contains = false;
+            string reference = "";
+            int count = 0;
+
+            do
+            {
+                if (contains || string.IsNullOrWhiteSpace(reference) && count > 0)
+                    Console.Clear();
+
+                Console.Write("Write path or name of your DLL file: ");
+                reference = Console.ReadLine();
+
+                contains = !pkg.References.IsNullOrEmpty() && pkg.References.Any(r => r == reference);
+
+                if (contains)
+                {
+                    Console.WriteLine($"Reference '{reference}' is already present on this package ({pkg.PrettyName})!", Color.Red);
+                    AnyKeyRetry();
+                }
+
+                if (string.IsNullOrWhiteSpace(reference))
+                {
+                    Console.WriteLine("Reference can't be null!", Color.Red);
+                    AnyKeyRetry();
+                }
+            }
+            while (contains || string.IsNullOrWhiteSpace(reference));
+
+            // TODO: Check if valid reference (or if you need to resolve it)
+
+            pkg.References = pkg.References.AddSafe(reference);
+
+            Console.WriteLine($"Succesfully added '{reference}' as reference!", Color.DarkGreen);
+            CurrentProgram.Exit();
+        }
+
+        private static void AnyKeyRetry()
+        {
+            Console.WriteLine();
+            Console.Write("Press any key to retry...");
+            Console.Read();
         }
 
         private static void Test()
@@ -57,7 +105,7 @@ namespace ZWSetup.Shell.Pages.Packages
                 throw new Exception(TesterException);
 
             Assembly asm;
-            if (!PackageHelper.GetAssembly(pkg.SetupPath, out asm))
+            if (!PackageHelper.GetAssembly(pkg, out asm))
             {
                 CurrentProgram.Exit();
                 return;
@@ -80,7 +128,7 @@ namespace ZWSetup.Shell.Pages.Packages
             // Step 0: Check if setup file has the needed methods (OnSetup && OnFinish)
             {
                 Assembly asm;
-                if (!PackageHelper.GetAssembly(pkg.SetupPath, out asm))
+                if (!PackageHelper.GetAssembly(pkg, out asm))
                 {
                     CurrentProgram.Exit();
                     return;
@@ -120,7 +168,7 @@ namespace ZWSetup.Shell.Pages.Packages
                 if (!pkg.DoesSetupExists)
                     throw new Exception(TesterException);
 
-                // We will only copy the *Setup.cs file.
+                // We will only copy the *.cs (hint: OnSetup) file.
                 File.Copy(pkg.SetupPath, Path.Combine(tempFolder, pkg.SetupFileName));
 
                 // Then, we will generate info.json and copy into the folder
