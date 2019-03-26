@@ -17,6 +17,7 @@ namespace ZWSetup.Shell.Pages
     using FeatureExpansion;
     using Extensions;
     using Lib.Model;
+    using Controller;
 
     public class PackageManager : UpdatableMenuPage
     {
@@ -77,7 +78,10 @@ namespace ZWSetup.Shell.Pages
                 return;
             }
 
-            asm.InvokeStaticMethod(pkg.SetupFullname, "OnSetup");
+            // Get executable path
+            string executablePath = Path.Combine(destination, pkg.RelExecutablePath);
+
+            asm.InvokeStaticMethod(pkg.SetupFullname, PackageConsts.OnSetupMethod, executablePath);
 
             // Exit after executing OnSetup
             CurrentProgram.Exit();

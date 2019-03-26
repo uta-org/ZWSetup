@@ -1,7 +1,10 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using uzLib.Lite.Extensions;
+
+using Console = Colorful.Console;
 
 namespace ZWSetup.Lib.Model
 {
@@ -39,6 +42,9 @@ namespace ZWSetup.Lib.Model
         [JsonIgnore]
         public string TempPrefix => $"{PrettyName}_";
 
+        [JsonIgnore]
+        public string RelExecutablePath => Path.Combine("Package", GetMainExecutable());
+
         [JsonProperty]
         public string SolutionPath { get; set; }
 
@@ -52,6 +58,20 @@ namespace ZWSetup.Lib.Model
         public ZTWPackage(string slnPath)
         {
             SolutionPath = slnPath;
+        }
+
+        private string GetMainExecutable()
+        {
+            try
+            {
+                string projectName = VSHelper.GetStartUpProjectName(SolutionPath);
+                return $"{projectName}.exe";
+            }
+            catch
+            {
+                Console.WriteLine("Solution must have a startup project in order to get the main executable.", Color.Red);
+                throw;
+            }
         }
     }
 }

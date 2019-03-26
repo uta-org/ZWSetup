@@ -111,7 +111,8 @@ namespace ZWSetup.Shell.Pages.Packages
                 return;
             }
 
-            asm.InvokeStaticMethod(pkg.SetupFullname, "OnSetup");
+            // TODO: There isn't any destination to get full path as parameter
+            asm.InvokeStaticMethod(pkg.SetupFullname, PackageConsts.OnSetupMethod, pkg.RelExecutablePath);
 
             CurrentProgram.Exit();
         }

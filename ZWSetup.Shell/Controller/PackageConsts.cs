@@ -2,7 +2,7 @@
 {
     public static class PackageConsts
     {
-        public const string OnSetupMethod = "OnSetup",
-                            OnFinishMethod = "OnFinish";
+        public static string OnSetupMethod => "OnSetup";
+        public static string OnFinishMethod => "OnFinish";
     }
 }
