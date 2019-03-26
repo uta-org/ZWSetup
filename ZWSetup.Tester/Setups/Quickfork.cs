@@ -18,15 +18,100 @@ namespace ZWSetup.Package.Quickfork
 
     public static class QuickforkSetup
     {
-        public static void OnSetup()
-        {
+        public static void OnSetup(string installationPath)
+        { 
+            // TODO: Get feedback from user instalation
+
             string outputPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "test.xml");
 
             XDocument doc = XDocument.Parse(GetPastebin());
 
-            doc.Descendants("UserCustomizations").First().Add(new XElement("add"));
+            // Feedback: Check if parameters with this GUIDs exists/conflicts/are valid
 
-            // File.WriteAllText(outputPath, );
+            var add0 = ConfigureElement("add",
+                new Tuple<string, string>("Cmd", "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:00000279"),
+                new Tuple<string, string>("CmdPri", "00308001"),
+                new Tuple<string, string>("Group", "{000AF700-CF09-4582-9E1C-2603403AB647}:00004115"),
+                new Tuple<string, string>("GroupPri", "00050000"),
+                new Tuple<string, string>("Menu", "{D309F791-903F-11D0-9EFC-00A0C911004F}:00000402"));
+
+            var modify0 = ConfigureElement("modify",
+                new Tuple<string, string>("Cmd", "{000AF700-CF09-4582-9E1C-2603403AB647}:00000407"),
+                new Tuple<string, string>("CmdPri", "00000000"),
+                new Tuple<string, string>("Group", "{000AF700-CF09-4582-9E1C-2603403AB647}:00004014"),
+                new Tuple<string, string>("GroupPri", "00050000"),
+                new Tuple<string, string>("Menu", "{D309F791-903F-11D0-9EFC-00A0C911004F}:00000402"),
+                new Tuple<string, string>("BeginGroup", "false"));
+
+            var modify1 = ConfigureElement("modify",
+                new Tuple<string, string>("Cmd", "{000AF700-CF09-4582-9E1C-2603403AB647}:00004225"),
+                new Tuple<string, string>("CmdPri", "00300000"),
+                new Tuple<string, string>("Group", "{000AF700-CF09-4582-9E1C-2603403AB647}:00004115"),
+                new Tuple<string, string>("GroupPri", "00050000"),
+                new Tuple<string, string>("Menu", "{D309F791-903F-11D0-9EFC-00A0C911004F}:00000402"),
+                new Tuple<string, string>("BeginGroup", "true"));
+
+            var modify2 = ConfigureElement("modify",
+                new Tuple<string, string>("Cmd", "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:00000279"),
+                new Tuple<string, string>("CmdPri", "00308001"),
+                new Tuple<string, string>("Group", "{000AF700-CF09-4582-9E1C-2603403AB647}:00004115"),
+                new Tuple<string, string>("GroupPri", "00050000"),
+                new Tuple<string, string>("Menu", "{D309F791-903F-11D0-9EFC-00A0C911004F}:00000402"),
+                new Tuple<string, string>("BeginGroup", "true"));
+
+            var modify3 = ConfigureElement("modify",
+                new Tuple<string, string>("Cmd", "{B92A417B-195E-41E4-9391-64F7D025020D}:00000100"),
+                new Tuple<string, string>("CmdPri", "01000000"),
+                new Tuple<string, string>("Group", "{B92A417B-195E-41E4-9391-64F7D025020D}:00001020"),
+                new Tuple<string, string>("GroupPri", "00010000"),
+                new Tuple<string, string>("Menu", "{D309F791-903F-11D0-9EFC-00A0C911004F}:00000430"),
+                new Tuple<string, string>("BeginGroup", "false"));
+
+            var xUserCustom = doc.Descendants("UserCustomizations").First();
+                
+            xUserCustom.Add(add0);
+            xUserCustom.Add(modify0);
+            xUserCustom.Add(modify1);
+            xUserCustom.Add(modify2);
+            xUserCustom.Add(modify3);
+
+            var xExtTools = doc.Descendants("Category").First(c => c.Attribute("RegisteredName").Value == "Environment_ExternalTools");
+
+            var xExtToolsEl = new XElement("ExternalTools");
+            var xUserCreatedToolEl = new XElement("UserCreatedTool");
+
+            // Feedback: Check if package with the same GUID already exists
+
+            xUserCreatedToolEl.Add(new XElement("Arguments", "$(SolutionDir)"));
+            xUserCreatedToolEl.Add(new XElement("CloseOnExit", "true"));
+            xUserCreatedToolEl.Add(new XElement("Command", installationPath));
+            xUserCreatedToolEl.Add(new XElement("Index", "3"));
+            xUserCreatedToolEl.Add(new XElement("InitialDirectory", "$(ItemDir)"));
+            xUserCreatedToolEl.Add(new XElement("IsGUIapp", "false"));
+            xUserCreatedToolEl.Add(new XElement("NameID", "0"));
+            xUserCreatedToolEl.Add(new XElement("Package", "{00000000-0000-0000-0000-000000000000}"));
+            xUserCreatedToolEl.Add(new XElement("PromptForArguments", "false"));
+            xUserCreatedToolEl.Add(new XElement("SaveAllDocs", "true"));
+            xUserCreatedToolEl.Add(new XElement("Title", "Relink project..."));
+            xUserCreatedToolEl.Add(new XElement("Unicode", "false"));
+            xUserCreatedToolEl.Add(new XElement("UseOutputWindow", "true"));
+            xUserCreatedToolEl.Add(new XElement("UseTaskList", "false"));
+
+            xExtToolsEl.Add(xUserCreatedToolEl);
+
+            xExtTools.Add(xExtToolsEl);
+
+            File.WriteAllText(outputPath, doc.ToString());
+        }
+
+        private static XElement ConfigureElement(string nodeName, params Tuple<string, string>[] attrs)
+        {
+            var xEl = new XElement(nodeName);
+
+            foreach (var attr in attrs)
+                xEl.SetAttributeValue(attr.Item1, attr.Item2);
+
+            return xEl;
         }
 
         public static void OnFinish()
