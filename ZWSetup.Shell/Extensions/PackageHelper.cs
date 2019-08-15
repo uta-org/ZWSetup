@@ -87,7 +87,10 @@ namespace ZWSetup.Shell.Extensions
             var provider = new CSharpCodeProvider();
             CompilerParameters parameters = new CompilerParameters();
 
-            parameters.ReferencedAssemblies.AddRange(package.References.ToArray());
+            var refs = package.References;
+
+            if (refs != null)
+                parameters.ReferencedAssemblies.AddRange(refs.ToArray());
 
             CompilerResults results = provider.CompileAssemblyFromFile(parameters, package.SetupPath);
 

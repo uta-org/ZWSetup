@@ -16,8 +16,11 @@ namespace ZWSetup.Package.Quickfork
     using System.Linq;
     using System.Xml.Linq;
 
+    // TODO: Test this
     public static class QuickforkSetup
     {
+        // TODO: A way to pass objects to the Setup classes
+
         public static void OnSetup(string installationPath)
         { 
             // TODO: Get feedback from user instalation
